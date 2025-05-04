@@ -57,13 +57,15 @@ public class Sale {
     public void updateRunningTotal(){
         Amount newTotal = new Amount();
         Amount newVAT = new Amount();
+        Amount newRunningTotal = new Amount();
 
         for (SaleItem item : items) {
             newTotal = newTotal.plus(item.getTotalPrice());
             newVAT = newVAT.plus(item.getTotalVAT());
         }
+        newRunningTotal = newRunningTotal.plus(newTotal).plus(newVAT);
 
-        this.runningTotal = newTotal;
+        this.runningTotal = newRunningTotal;
         this.totalVAT = newVAT;
     }
 

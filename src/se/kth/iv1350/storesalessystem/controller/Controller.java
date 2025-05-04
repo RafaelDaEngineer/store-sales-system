@@ -68,9 +68,6 @@ public class Controller {
         currentSale.applySaleDiscount(discountInfo);
     }
 
-    public Amount endSale(){
-        return currentSale.getTotalAfterDiscount();
-    }
 
     /**
      * Makes payment for the current sale.
@@ -99,6 +96,10 @@ public class Controller {
     }
 
     public Amount getCurrentTotal() {
+        return currentSale.getTotalAfterDiscount();
+    }
+
+    public Amount endSale(){
         return currentSale.getTotalAfterDiscount();
     }
 
