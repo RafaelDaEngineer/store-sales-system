@@ -3,13 +3,17 @@ package se.kth.iv1350.storesalessystem.model;
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 
 /**
- * Handles discount calculation for a sale.
+ * Represents a discount applied to a sale.
+ * This class encapsulates the logic for managing and applying
+ * discounts based on discount information.
  */
 public class SaleDiscount {
     private DiscountInfoDTO discountInfo;
 
     /**
-     * Creates a new instance with no discount.
+     * Default constructor for the SaleDiscount class.
+     * Initializes a new instance of the SaleDiscount class with default discount information.
+     * Creates a new instance of DiscountInfoDTO with default values to represent no discount applied.
      */
     public SaleDiscount(){
         this.discountInfo = new DiscountInfoDTO();
@@ -17,17 +21,22 @@ public class SaleDiscount {
 
     /**
      * Sets the discount information for the sale.
+     * Updates the current discount details with the provided {@code DiscountInfoDTO} instance.
      *
-     * @param discountInfo The discount to apply to the sale.
+     * @param discountInfo The {@code DiscountInfoDTO} object containing discount-related information,
+     *                     including the discount amount, percentage, and type.
      */
     public void setDiscountInfo(DiscountInfoDTO discountInfo){
         this.discountInfo = discountInfo;
     }
 
     /**
-     * Applies the current discount to the specified amount.
-     * @param amount The amount to apply the discount to.
-     * @return The amount after discount has been applied.
+     * Applies the discount defined in the {@code DiscountInfoDTO} object to the given amount.
+     * Discounts may consist of a fixed amount, a percentage, or a combination of both.
+     * If the total discount exceeds the original amount, the resulting amount is set to zero.
+     *
+     * @param amount The {@code Amount} object representing the original monetary value before discount.
+     * @return A new {@code Amount} object representing the value after applying the discount.
      */
     public Amount applyDiscountTo(Amount amount){
         if(!discountInfo.isApplicable()){
@@ -46,14 +55,5 @@ public class SaleDiscount {
         }
 
         return amount.minus(totalDiscount);
-    }
-
-    /**
-     * Gets the current discount information.
-     *
-     * @return The discount information.
-     */
-    public DiscountInfoDTO getDiscountInfo(){
-        return discountInfo;
     }
 }

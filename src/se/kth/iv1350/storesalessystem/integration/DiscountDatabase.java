@@ -5,7 +5,9 @@ import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
 
 /**
- * Handles discount information retrieval from an external discount database.
+ * Handles retrieval of discount information from an external discount database.
+ * This class is responsible for providing discount details applicable to specific
+ * customers and sales, based on customer and sale data.
  */
 public class DiscountDatabase {
 
@@ -16,15 +18,16 @@ public class DiscountDatabase {
     }
 
     /**
-     * Retrieves discount information for a specific customer and sale.
+     * Retrieves discount information applicable to a specific customer and their ongoing sale.
+     * The method interacts with an external database to fetch the discount details based
+     * on customer ID and sale information. This is a placeholder for the real implementation.
      *
-     * @param customerID The ID of the customer to get discount for.
-     * @param saleInfo Information about the current sale.
-     * @return Discount information applicable to this customer and sale.
+     * @param customerID The unique identifier of the customer for whom the discount is being retrieved.
+     * @param saleInfo The data transfer object containing details about the current sale,
+     *                 including total amount, VAT, and customer information.
+     * @return A {@code DiscountInfoDTO} object containing the applicable discount details for the specified customer and sale.
      */
     public DiscountInfoDTO findDiscount(int customerID, SaleInfoDTO saleInfo){
-        // Implmentation would connect to an external discount database and retrieve applicable discount information.
-        //This is a placeholder for the real implementation.
         return new DiscountInfoDTO();
     }
 }

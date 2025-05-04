@@ -1,10 +1,10 @@
 package se.kth.iv1350.storesalessystem.model;
 
 /**
- * Represents a monetary amount in the sales system.
+ * Represents an immutable monetary amount with basic arithmetic operations.
  */
 public class Amount {
-    private double amount;
+    private final double amount;
     
     /**
      * Creates a new instance with the specified amount.
@@ -14,18 +14,18 @@ public class Amount {
     public Amount(double amount) {
         this.amount = amount;
     }
-    
+
     /**
-     * Creates a new instance with zero amount.
+     * Creates a new instance of the Amount class with a default value of 0.
      */
     public Amount() {
         this(0);
     }
-    
+
     /**
-     * Returns the current amount.
-     * 
-     * @return The amount stored in this object.
+     * Retrieves the monetary amount represented by this object.
+     *
+     * @return The monetary amount as a double value.
      */
     public double getAmount() {
         return amount;

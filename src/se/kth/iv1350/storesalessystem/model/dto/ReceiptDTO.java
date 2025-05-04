@@ -7,7 +7,9 @@ import se.kth.iv1350.storesalessystem.model.Amount;
 
 
 /**
- * Data Transfer Object containing information about a sale receipt.
+ * A Data Transfer Object (DTO) representing a receipt in the store sales system.
+ * This class contains all necessary details about a completed sale,
+ * including the purchased items, financial information, and transaction metadata.
  */
 public class ReceiptDTO {
     private final  String dateTime;
@@ -18,17 +20,18 @@ public class ReceiptDTO {
     private final Amount change;
 
     /**
-     * Creates a new instance with the specified receipt information.
-     * @param dateTime The date and time of the sale.
-     * @param items The items purchased in the sale.
-     * @param totalAmount The total amount for the sale.
-     * @param totalVAT The total VAT for the sale.
-     * @param totalPaid The total amount paid for the sale.
-     * @param change The change due for the sale.
+     * Creates an instance of {@code ReceiptDTO}, representing the data of a completed sale.
+     *
+     * @param dateTime The date and time when the sale was completed.
+     * @param items The list of items purchased during the sale.
+     * @param totalAmount The total cost of the items in the sale.
+     * @param totalVAT The total value-added tax for the sale.
+     * @param totalPaid The total amount paid by the customer.
+     * @param change The change to be given back to the customer.
      */
     public ReceiptDTO(String dateTime, List<ReceiptItemDTO> items, Amount totalAmount, Amount totalVAT, Amount totalPaid, Amount change){
         this.dateTime = dateTime;
-        this.items = new ArrayList<>(items); // Create defensive copy.
+        this.items = new ArrayList<>(items);
         this.totalAmount = new Amount(totalAmount.getAmount());
         this.totalVAT = new Amount(totalVAT.getAmount());
         this.totalPaid = new Amount(totalPaid.getAmount());

@@ -5,7 +5,10 @@ import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
 
 /**
- * Data Transfer Object containing information about a sale.
+ * Data Transfer Object (DTO) containing summary details about an ongoing sale.
+ * This class is immutable and provides methods to retrieve information about the sale
+ * such as the running total, customer ID, and total VAT. The purpose of this class
+ * is to facilitate secure transfer of sale-related data within the system.
  */
 public class SaleInfoDTO {
     private final Amount runningTotal;
@@ -13,13 +16,13 @@ public class SaleInfoDTO {
     private final Amount totalVAT;
 
     /**
-     * Creates a new instance with the specified sale information.
+     * Creates an instance of {@code SaleInfoDTO}, representing summarized data about an ongoing sale.
      *
-     * @param runningTotal The running total of the sale.
-     * @param saleID The ID of the sale.
-     * @param items The items in the sale.
-     * @param customerID The ID of the customer making the purchase.
-     * @param totalVAT The total VAT the sale.
+     * @param saleID The unique identifier of the sale.
+     * @param runningTotal The running total amount of the sale.
+     * @param items A collection of items included in the ongoing sale.
+     * @param customerID The ID of the customer involved in the sale.
+     * @param totalVAT The total value-added tax amount for the sale.
      */
     public SaleInfoDTO(int saleID, Amount runningTotal, Collection<ItemDTO> items, int customerID, Amount totalVAT){
         this.runningTotal = new Amount(runningTotal.getAmount());

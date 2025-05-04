@@ -9,7 +9,9 @@ import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
 /**
- * Represents a sale in progress and its basic properties.
+ * Represents a sale transaction. A sale consists of multiple items,
+ * may have associated customer information, keeps track of the
+ * running total and applicable VAT, and can apply discounts.
  */
 public class Sale {
     private final LocalDateTime saleTime;
@@ -21,9 +23,10 @@ public class Sale {
     private final SaleDiscount saleDiscount;
 
     /**
-     * Creates a new sale instance.
+     * Creates a new instance of the Sale class with the specified sale ID.
+     * Initializes the sale's creation time, item list, running total, VAT, and sale discount.
      *
-     * @param saleID The ID of the sale.
+     * @param saleID The unique identifier for this sale.
      */
     public Sale(int saleID){
         this.saleID = saleID;
@@ -35,10 +38,11 @@ public class Sale {
     }
 
     /**
-     * Adds an item to the current sale.
+     * Adds an item to the current sale along with its specified quantity.
+     * Updates the running total of the sale based on the added item.
      *
-     * @param item The item to add.
-     * @param quantity The quantity of the item.
+     * @param item The item to be added to the sale, represented as an ItemDTO.
+     * @param quantity The quantity of the item to be added.
      */
     public void addItem(ItemDTO item, int quantity){
         SaleItem saleItem = new SaleItem(item, quantity);
@@ -47,7 +51,12 @@ public class Sale {
     }
 
     /**
-     * Updates the running total based on the current items in the sale.
+     * Updates the running total and total VAT for the current sale.
+     * This method calculates the total price and VAT for all items in the sale.
+     * It then updates the running total and total VAT fields with the computed values.
+     * The running total is calculated as the sum of:
+     * - The total price of all items.
+     * - The total VAT of all items.
      */
     public void updateRunningTotal(){
         Amount newTotal = new Amount();
@@ -65,12 +74,20 @@ public class Sale {
     }
 
     /**
-     * Gets the customer ID of the sale.
+     * Sets the customer ID associated with the current sale.
+     *
+     * @param customerID The unique identifier for the customer participating in this sale.
      */
     public void setCustomerID(int customerID){
         this.customerID = customerID;
     }
 
+    /**
+     * Retrieves detailed information about the current sale, including sale ID, running total,
+     * items in the sale, customer ID, and total VAT.
+     *
+     * @return A {@code SaleInfoDTO} object containing summarized details of the current sale.
+     */
     public SaleInfoDTO getSaleInfo(){
         List<ItemDTO> itemDTOs = new ArrayList<>();
         for (SaleItem item : items){
@@ -80,54 +97,60 @@ public class Sale {
     }
 
     /**
-     * Gets the total amount for this sale after any discount.
+     * Retrieves the total amount after applying the discount to the running total of the sale.
+     * The discount is calculated based on the current sale's discount information.
      *
-     * @return The total amount after discount.
+     * @return The total monetary amount after the discount, represented as an {@code Amount} object.
      */
     public Amount getTotalAfterDiscount(){
         return saleDiscount.applyDiscountTo(runningTotal);
     }
 
     /**
-     * Gets the total VAT amount for this sale.
+     * Retrieves the total VAT (Value Added Tax) for the current sale.
+     * This amount represents the total tax collected based on the sale's items
+     * and their respective tax rates.
      *
-     * @return The total VAT amount.
+     * @return The total VAT as an {@code Amount} object.
      */
     public Amount getTotalVAT(){
         return new Amount(totalVAT.getAmount());
     }
 
     /**
-     * Gets the local date and time when this sale was created.
+     * Retrieves the time when the sale was created.
      *
-     * @return The date and time of the sale.
+     * @return The creation timestamp of the sale as a {@code LocalDateTime} object.
      */
     public LocalDateTime getSaleTime(){
         return saleTime;
     }
 
     /**
-     * Gets an unmodifiable view of the items in the sale.
+     * Retrieves the list of all items currently included in the sale.
+     * The returned list is unmodifiable to ensure the integrity of the sale's item list.
      *
-     * @return The items in this sale.
+     * @return An unmodifiable list of {@code SaleItem} objects representing the items in the sale.
      */
     public List<SaleItem> getItems() {
         return Collections.unmodifiableList(items);
     }
 
     /**
-     * Gets the ID of this sale.
+     * Retrieves the unique identifier for the current sale.
      *
-     * @return The ID of this sale.
+     * @return The sale ID as an integer value.
      */
     public int getSaleID(){
         return saleID;
     }
 
     /**
-     * Finds an item in the sale by its ID.
-     * @param itemID The ID of the item to find.
-     * @return The sale item if found, null otherwise.
+     * Searches for a {@code SaleItem} in the current sale by its unique identifier.
+     * If the item with the specified ID exists, it will be returned; otherwise, {@code null} is returned.
+     *
+     * @param itemID The unique identifier of the item to search for.
+     * @return The {@code SaleItem} matching the given ID, or {@code null} if no matching item is found.
      */
     public SaleItem findItemByID(String itemID) {
         for (SaleItem item : items) {
@@ -139,9 +162,12 @@ public class Sale {
     }
 
     /**
-     * Increases the quantity of an existing item.
-     * @param itemID The ID of the item to increase.
-     * @param additionalQuantity The additional quantity to add.
+     * Increases the quantity of a specific item in the current sale.
+     * If the item exists, its quantity is updated by the specified amount,
+     * and the running total is recalculated.
+     *
+     * @param itemID The unique identifier of the item whose quantity should be increased.
+     * @param additionalQuantity The amount by which the item's quantity should be increased.
      */
     public void increaseItemQuantity(String itemID, int additionalQuantity) {
         SaleItem existingItem = findItemByID(itemID);
@@ -164,8 +190,10 @@ public class Sale {
     }
 
     /**
-     * Applies a discount to this sale.
-     * @param discountInfo The discount information to apply.
+     * Applies a sale discount to the current sale by setting the provided discount information.
+     *
+     * @param discountInfo The information about the discount to be applied to the sale,
+     *                     represented as a {@code DiscountInfoDTO}.
      */
     public void applySaleDiscount(DiscountInfoDTO discountInfo) {
         saleDiscount.setDiscountInfo(discountInfo);

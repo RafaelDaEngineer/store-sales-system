@@ -3,8 +3,9 @@ package se.kth.iv1350.storesalessystem.integration.dto;
 import se.kth.iv1350.storesalessystem.model.Amount;
 
 /**
- * Data Transfer Object containing information about a discount.
- * This class is immutable and preserves encapsulation through defensive copying.
+ * Data Transfer Object (DTO) for transferring discount information within the sales system.
+ * This class encapsulates information related to a discount, such as the discount amount,
+ * percentage, and type, ensuring immutability and safe encapsulation.
  */
 public class DiscountInfoDTO {
     private final Amount discountAmount;
@@ -12,10 +13,11 @@ public class DiscountInfoDTO {
     private final String discountType;
 
     /**
-     * Creates a new instance with the specified discount information.
-     * @param discountAmount The discount amount.
-     * @param discountPercentage The discount percentage.
-     * @param discountType The discount type.
+     * Creates a new instance of DiscountInfoDTO with the specified discount amount, percentage, and type.
+     *
+     * @param discountAmount The monetary value of the discount. This is represented as an {@code Amount} object.
+     * @param discountPercentage The percentage value of the discount, represented as an integer.
+     * @param discountType The type of the discount, represented as a string.
      */
     public DiscountInfoDTO(Amount discountAmount, int discountPercentage, String discountType){
         this.discountAmount = new Amount(discountAmount.getAmount());
@@ -24,39 +26,55 @@ public class DiscountInfoDTO {
     }
 
     /**
-     * Creates a new instance with no discount.
+     * Creates a new instance of DiscountInfoDTO with default values.
+     * The default values are:
+     * - A discount amount of zero, represented by an {@code Amount} object.
+     * - A discount percentage of zero.
+     * - A discount type of "none".
+     * This constructor is used when no specific discount information is provided or available.
      */
     public DiscountInfoDTO(){
         this(new Amount(0), 0, "none");
     }
 
     /**
-     * Get the discount amount.
-     * @return A copy of the discount amount.
+     * Retrieves the fixed discount amount encapsulated in this object.
+     * This amount represents a specific monetary value for the discount.
+     *
+     * @return A new {@code Amount} object containing the fixed discount value.
      */
     public Amount getDiscountAmount(){
         return new Amount(discountAmount.getAmount());
     }
 
     /**
-     * Get the discount percentage.
-     * @return The discount percentage.
+     * Retrieves the discount percentage associated with this discount.
+     * This percentage represents the portion of a value that will
+     * be discounted when the discount is applied.
+     *
+     * @return The discount percentage as an integer.
      */
     public int getDiscountPercentage(){
         return discountPercentage;
     }
 
     /**
-     * Get the discount type.
-     * @return The discount type.
+     * Retrieves the type of the discount encapsulated in this object.
+     * The discount type typically describes the category or nature of the discount.
+     *
+     * @return The type of the discount as a string.
      */
     public String getDiscountType(){
         return discountType;
     }
 
     /**
-     * Checks if the discount is applicable (has a non-zero amount or percentage).
-     * @return True if the discount is applicable, false otherwise.
+     * Determines if the discount is applicable based on its attributes.
+     * A discount is deemed applicable if either its fixed discount amount is greater than zero
+     * or if its discount percentage is greater than zero.
+     *
+     * @return {@code true} if the discount has a positive monetary amount or a positive percentage,
+     *         {@code false} otherwise.
      */
     public boolean isApplicable(){
         return discountAmount.getAmount() > 0 || discountPercentage > 0;
