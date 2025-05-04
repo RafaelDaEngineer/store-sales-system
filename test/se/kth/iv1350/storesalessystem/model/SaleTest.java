@@ -26,7 +26,7 @@ class SaleTest {
         sale.addItem(testItem, 1);
         assertEquals(1, sale.getItems().size(), "Sale should contain one item");
 
-        SaleItem saleItem = sale.getItems().get(0);
+        SaleItem saleItem = sale.getItems().getFirst();
         assertEquals("1", saleItem.getItemDTO().getItemID(), "Item ID should match");
         assertEquals(1, saleItem.getQuantity(), "Sale should contain correct quantity");
     }

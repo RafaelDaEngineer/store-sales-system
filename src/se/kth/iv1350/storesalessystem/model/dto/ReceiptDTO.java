@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import se.kth.iv1350.storesalessystem.model.Amount;
-import se.kth.iv1350.storesalessystem.model.dto.ReceiptItemDTO;
 
 
 /**

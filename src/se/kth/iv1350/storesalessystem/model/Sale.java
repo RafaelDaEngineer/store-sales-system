@@ -4,11 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
@@ -23,7 +18,7 @@ public class Sale {
     private int customerID;
     private Amount runningTotal;
     private Amount totalVAT;
-    private SaleDiscount saleDiscount;
+    private final SaleDiscount saleDiscount;
 
     /**
      * Creates a new sale instance.
@@ -71,7 +66,6 @@ public class Sale {
 
     /**
      * Gets the customer ID of the sale.
-     * @return customerID The customer ID.
      */
     public void setCustomerID(int customerID){
         this.customerID = customerID;
@@ -128,15 +122,6 @@ public class Sale {
      */
     public int getSaleID(){
         return saleID;
-    }
-
-    /**
-     * Gets the customer ID for this sale.
-     *
-     * @return The customer ID.
-     */
-    public int getCustomerID(){
-        return customerID;
     }
 
     /**

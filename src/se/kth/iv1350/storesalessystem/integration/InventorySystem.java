@@ -3,11 +3,10 @@ package se.kth.iv1350.storesalessystem.integration;
 import java.util.HashMap;
 import java.util.Map;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
-import se.kth.iv1350.storesalessystem.model.Amount;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
 public class InventorySystem {
-    private Map<String, ItemDTO> inventory;
+    private final Map<String, ItemDTO> inventory;
 
     public InventorySystem(){
         this.inventory = new HashMap<>();
@@ -22,6 +21,5 @@ public class InventorySystem {
     }
 
     public void updateInventory(SaleInfoDTO saleInfoDTO){
-
     }
 }

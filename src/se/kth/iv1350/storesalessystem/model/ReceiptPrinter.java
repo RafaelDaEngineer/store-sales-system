@@ -4,7 +4,7 @@ import se.kth.iv1350.storesalessystem.integration.Printer;
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptDTO;
 
 public class ReceiptPrinter {
-    private Printer printer;
+    private final Printer printer;
 
     public ReceiptPrinter(Printer printer){
         this.printer = printer;

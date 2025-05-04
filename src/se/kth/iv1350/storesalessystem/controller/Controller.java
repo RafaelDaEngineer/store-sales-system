@@ -10,19 +10,17 @@ import se.kth.iv1350.storesalessystem.model.*;
 
 
 public class Controller {
-    private InventorySystem inventorySystem;
-    private DiscountDatabase discountDatabase;
-    private AccountingSystem accountingSystem;
-    private CashRegister cashRegister;
-    private ReceiptPrinter receiptPrinter;
-    private SaleLogger saleLogger;
+    private final InventorySystem inventorySystem;
+    private final DiscountDatabase discountDatabase;
+    private final CashRegister cashRegister;
+    private final ReceiptPrinter receiptPrinter;
+    private final SaleLogger saleLogger;
     private Sale currentSale;
 
 
     public Controller(InventorySystem inventorySystem, DiscountDatabase discountDatabase, AccountingSystem accountingSystem, Printer printer){
         this.inventorySystem = inventorySystem;
         this.discountDatabase = discountDatabase;
-        this.accountingSystem = accountingSystem;
         this.cashRegister = new CashRegister();
         this.receiptPrinter = new ReceiptPrinter(printer);
         this.saleLogger = new SaleLogger(accountingSystem, inventorySystem);

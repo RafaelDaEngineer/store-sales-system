@@ -10,11 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReceiptPrinterTest {
     private ReceiptPrinter receiptPrinter;
     private Sale sale;
-    private Printer printer;
 
     @BeforeEach
     void setUp() {
-        printer = new Printer();
+        Printer printer = new Printer();
         receiptPrinter = new ReceiptPrinter(printer);
         sale = new Sale(1);
         ItemDTO item = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));

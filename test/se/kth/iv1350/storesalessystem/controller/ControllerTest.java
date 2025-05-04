@@ -1,6 +1,5 @@
 package se.kth.iv1350.storesalessystem.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.kth.iv1350.storesalessystem.integration.AccountingSystem;
@@ -15,21 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
     private Controller controller;
-    private InventorySystem inventorySystem;
-    private DiscountDatabase discountDatabase;
-    private AccountingSystem accountingSystem;
-    private Printer printer;
-    private ItemDTO testItem;
 
     @BeforeEach
     public void setUp() {
-        inventorySystem = new InventorySystem();
-        discountDatabase = new DiscountDatabase();
-        accountingSystem = new AccountingSystem();
-        printer = new Printer();
+        InventorySystem inventorySystem = new InventorySystem();
+        DiscountDatabase discountDatabase = new DiscountDatabase();
+        AccountingSystem accountingSystem = new AccountingSystem();
+        Printer printer = new Printer();
         controller = new Controller(inventorySystem, discountDatabase, accountingSystem, printer);
 
-        testItem = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));
+        ItemDTO testItem = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));
         inventorySystem.addItem(testItem);
     }
 

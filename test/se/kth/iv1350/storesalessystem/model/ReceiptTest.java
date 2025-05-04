@@ -9,12 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ReceiptTest {
     private Receipt receipt;
-    private Sale sale;
     private Amount amountPaid;
 
     @BeforeEach
     void setUp() {
-        sale = new Sale(1);
+        Sale sale = new Sale(1);
         ItemDTO item = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));
         sale.addItem(item, 2);
 
