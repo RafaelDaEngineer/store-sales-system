@@ -4,6 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
@@ -69,57 +75,12 @@ public class Sale {
         this.customerID = customerID;
     }
 
-    /**
-     * Gets information about the current sale for discount calculation.
-     * @return Sale information formatted for discount requests.
-     */
-    public SaleInfoDTO getSaleInfoForDiscount(){
-        return new SaleInfoDTO(
-                saleID,
-                runningTotal,
-                extractItemDTOs(),
-                customerID,
-                totalVAT
-        );
-    }
-
-    /**
-     * Gets information about the current sale for accounting purposes.
-     *
-     * @return Sale information formatted for accounting.
-     */
-    public SaleInfoDTO getSaleInfoForAccounting() {
-        return new SaleInfoDTO(
-                saleID,
-                getTotalAfterDiscount(),
-                extractItemDTOs(),
-                customerID,
-                totalVAT
-        );
-    }
-
-    /**
-     * Gets information about the current sale for inventory purposes.
-     *
-     * @return Sale information formatted for inventory.
-     */
-    public SaleInfoDTO getSaleInfoForInventory() {
-        return new SaleInfoDTO(
-                saleID,
-                runningTotal,
-                extractItemDTOs(),
-                customerID,
-                totalVAT
-        );
-    }
-
-
-    public List<ItemDTO> extractItemDTOs(){
+    public SaleInfoDTO getSaleInfo(){
         List<ItemDTO> itemDTOs = new ArrayList<>();
         for (SaleItem item : items){
             itemDTOs.add(item.getItemDTO());
         }
-        return itemDTOs;
+        return new SaleInfoDTO(saleID, runningTotal, itemDTOs, customerID, totalVAT);
     }
 
     /**
@@ -174,5 +135,52 @@ public class Sale {
      */
     public int getCustomerID(){
         return customerID;
+    }
+
+    /**
+     * Finds an item in the sale by its ID.
+     * @param itemID The ID of the item to find.
+     * @return The sale item if found, null otherwise.
+     */
+    public SaleItem findItemByID(String itemID) {
+        for (SaleItem item : items) {
+            if (item.getItemDTO().getItemID().equals(itemID)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Increases the quantity of an existing item.
+     * @param itemID The ID of the item to increase.
+     * @param additionalQuantity The additional quantity to add.
+     */
+    public void increaseItemQuantity(String itemID, int additionalQuantity) {
+        SaleItem existingItem = findItemByID(itemID);
+        if (existingItem != null) {
+            // Since SaleItem is immutable, we need to create a new one
+            // and replace the old one
+            ItemDTO itemInfo = existingItem.getItemDTO();
+            int newQuantity = existingItem.getQuantity() + additionalQuantity;
+
+            // Remove old item
+            items.remove(existingItem);
+
+            // Add new item with updated quantity
+            SaleItem updatedItem = new SaleItem(itemInfo, newQuantity);
+            items.add(updatedItem);
+
+            // Update running total
+            updateRunningTotal();
+        }
+    }
+
+    /**
+     * Applies a discount to this sale.
+     * @param discountInfo The discount information to apply.
+     */
+    public void applySaleDiscount(DiscountInfoDTO discountInfo) {
+        saleDiscount.setDiscountInfo(discountInfo);
     }
 }

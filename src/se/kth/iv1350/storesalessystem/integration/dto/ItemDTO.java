@@ -8,9 +8,10 @@ import se.kth.iv1350.storesalessystem.model.Amount;
 
 public class ItemDTO {
     private final String description;
+    private final String name;
     private final double tax;
     private final Amount price;
-    private final int itemID;
+    private final String itemID;
 
     /**
     * Creates a new instance representing an item.
@@ -20,8 +21,9 @@ public class ItemDTO {
     * @param tax The tax rate of the item.
     * @param price The price of the item.
     */
-    public ItemDTO(int itemID, String description, double tax, Amount price) {
+    public ItemDTO(String itemID, String name, String description, double tax, Amount price) {
         this.itemID = itemID;
+        this.name = name;
         this.description = description;
         this.tax = tax;
         this.price = new Amount(price.getAmount()); // Defensive copy.
@@ -31,8 +33,12 @@ public class ItemDTO {
      * Get the item's ID.
      * @return The item's ID.
      */
-    public int getItemID(){
+    public String getItemID(){
         return itemID;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

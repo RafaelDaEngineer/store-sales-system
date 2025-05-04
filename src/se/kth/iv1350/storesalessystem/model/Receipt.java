@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptDTO;
+import se.kth.iv1350.storesalessystem.model.dto.ReceiptItemDTO;
 
 /**
  * Represents a receipt for a completed sale.
@@ -16,25 +17,24 @@ public class Receipt {
     private final Amount change;
 
     /**
-     * Creates a new receipt for the given sale..
+     * Creates a new receipt for the given sale.
      * @param sale The completed sale.
      * @param amountPaid The amount paid for the sale.
-     * @param change The change due for the sale.
      */
-    public Receipt(Sale sale, Amount amountPaid, Amount change){
+    public Receipt(Sale sale, Amount amountPaid){
         this.sale = sale;
-        this.amountPaid = amountPaid;
-        this.change = calculateChange(amountPaid);
+        this.amountPaid = new Amount(amountPaid.getAmount());
+        this.change = calculateChange();
     }
 
     /**
      * Calculates the change to return to the customer.
      *
-     * @param amountPaid The amount paid by the customer.
      * @return The change amount.
      */
-    private Amount calculateChange(Amount amountPaid){
-        return amountPaid.minus(sale.getTotalAfterDiscount());
+    private Amount calculateChange() {
+        Amount totalAfterDiscount = sale.getTotalAfterDiscount();
+        return amountPaid.minus(totalAfterDiscount);
     }
 
     /**
@@ -44,9 +44,9 @@ public class Receipt {
      */
     public ReceiptDTO createReceiptDTO(){
         String dateTime = formatDateTime(sale.getSaleTime());
-        List<ItemDTO> itemDTOS = extractItemDTOs();
+        List<ReceiptItemDTO> receiptItems = createReceiptItems();
 
-        return new ReceiptDTO(dateTime, itemDTOS, sale.getTotalAfterDiscount(), sale.getTotalVAT(), amountPaid, change);
+        return new ReceiptDTO(dateTime, receiptItems, sale.getTotalAfterDiscount(), sale.getTotalVAT(), amountPaid, change);
     }
 
     private String formatDateTime(LocalDateTime dateTime){
@@ -54,11 +54,31 @@ public class Receipt {
         return dateTime.format(formatter);
     }
 
-    private List<ItemDTO> extractItemDTOs(){
-        List<ItemDTO> result = new ArrayList<>();
-        for (SaleItem item : sale.getItems()){
-            result.add(item.getItemDTO());
+    private List<ReceiptItemDTO> createReceiptItems(){
+        List<ReceiptItemDTO> result = new ArrayList<>();
+        for (SaleItem saleItem : sale.getItems()){
+            ItemDTO item = saleItem.getItemDTO();
+            int quantity = saleItem.getQuantity();
+            result.add(new ReceiptItemDTO(item, quantity));
         }
         return result;
+    }
+
+    /**
+     * Gets the change amount for this receipt.
+     *
+     * @return The change amount.
+     */
+    public Amount getChange() {
+        return new Amount(change.getAmount());
+    }
+
+    /**
+     * Gets the amount paid for this receipt.
+     *
+     * @return The amount paid.
+     */
+    public Amount getAmountPaid() {
+        return new Amount(amountPaid.getAmount());
     }
 }

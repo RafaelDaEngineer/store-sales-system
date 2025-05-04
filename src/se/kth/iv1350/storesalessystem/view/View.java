@@ -25,32 +25,12 @@ public class View {
      * @param itemInfo The item to display.
      */
     public void displayItem(ItemDTO itemInfo){
-        System.out.println("Item: " + itemInfo.getDescription());
-        System.out.println("Price: " + itemInfo.getPrice().getAmount() + " kr");
-        System.out.println("Tax rate: " + (itemInfo.getTax() * 100) + "%");
-    }
-
-    /**
-     * Displays an error message for a specific error type.
-     *
-     * @param errorType The type of error that occured.
-     * @param errorMessage A descriptive message of the error.
-     */
-    public void displayError(String errorType, String errorMessage){
-        System.out.println("ERROR: " + errorType);
-        System.out.println("Message: " + errorMessage);
-    }
-
-    /**
-     * Displays specific item not found error.
-     * @param itemID the ID of the item that was not found.
-     */
-    public void displayItemNotFoundError(int itemID){
-        displayError("Item not found", "Item with ID " + itemID + " was not found.");
-    }
-
-    public void displayDatabaseError(String systemName){
-        displayError("Database Connection Failed", "Could not connect to " + systemName + " Please try again later.");
+        System.out.println("Item ID: " + itemInfo.getItemID());
+        System.out.println("Item name: " + itemInfo.getName());
+        System.out.println("Item cost: " + formatAmount(itemInfo.getPrice().getAmount()) + " SEK");
+        System.out.println("VAT: " + (int)(itemInfo.getTax() * 100) + "%");
+        System.out.println("Item description: " + itemInfo.getDescription());
+        System.out.println();
     }
 
     /**
@@ -59,7 +39,13 @@ public class View {
      * @param total The change amount.
      */
     public void displayCurrentTotal(Amount total){
-        System.out.println("Current total: " + total.getAmount() + " kr");
+        System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
+        System.out.println();
+    }
+
+    public void displayTotalVAT() {
+        Amount vat = controller.getTotalVAT();
+        System.out.println("Total VAT: " + formatAmount(vat.getAmount()) + " SEK");
     }
 
     /**
@@ -68,6 +54,10 @@ public class View {
      * @param change The change amount.
      */
     public void displayChange(Amount change){
-        System.out.println("Change: " + change.getAmount() + " kr");
+        System.out.println("Change: " + formatAmount(change.getAmount()) + " SEK");
+    }
+
+    private String formatAmount(double amount){
+        return String.format("%.2f", amount).replace(".", ":") + " SEK";
     }
 }

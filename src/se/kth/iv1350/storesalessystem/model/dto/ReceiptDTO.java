@@ -3,15 +3,16 @@ package se.kth.iv1350.storesalessystem.model.dto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
+import se.kth.iv1350.storesalessystem.model.dto.ReceiptItemDTO;
+
 
 /**
  * Data Transfer Object containing information about a sale receipt.
  */
 public class ReceiptDTO {
     private final  String dateTime;
-    private final List<ItemDTO> items;
+    private final List<ReceiptItemDTO> items;
     private final Amount totalAmount;
     private final Amount totalVAT;
     private final Amount totalPaid;
@@ -26,7 +27,7 @@ public class ReceiptDTO {
      * @param totalPaid The total amount paid for the sale.
      * @param change The change due for the sale.
      */
-    public ReceiptDTO(String dateTime, List<ItemDTO> items, Amount totalAmount, Amount totalVAT, Amount totalPaid, Amount change){
+    public ReceiptDTO(String dateTime, List<ReceiptItemDTO> items, Amount totalAmount, Amount totalVAT, Amount totalPaid, Amount change){
         this.dateTime = dateTime;
         this.items = new ArrayList<>(items); // Create defensive copy.
         this.totalAmount = new Amount(totalAmount.getAmount());
@@ -47,7 +48,7 @@ public class ReceiptDTO {
     * Get the items purchased in the sale.
     * @return An unmodifiable view of the items purchased in the sale.
      */
-    public List<ItemDTO> getItems(){
+    public List<ReceiptItemDTO> getItems(){
         return Collections.unmodifiableList(items);
     }
 

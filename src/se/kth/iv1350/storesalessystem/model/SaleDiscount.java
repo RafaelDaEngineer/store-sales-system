@@ -30,11 +30,22 @@ public class SaleDiscount {
      * @return The amount after discount has been applied.
      */
     public Amount applyDiscountTo(Amount amount){
-        if(discountInfo.isApplicable()){
-            Amount discountedAmount = discountInfo.calculateDiscountValue(amount);
-            return amount.minus(discountedAmount);
+        if(!discountInfo.isApplicable()){
+            return new Amount(amount.getAmount());
         }
-        return new Amount(amount.getAmount());
+
+        Amount fixedDiscount = discountInfo.getDiscountAmount();
+
+        double percentageDiscountRate = discountInfo.getDiscountPercentage() / 100.0;
+        Amount percentageDiscount = amount.multiply(percentageDiscountRate);
+
+        Amount totalDiscount = fixedDiscount.plus(percentageDiscount);
+
+        if(totalDiscount.getAmount() > amount.getAmount()){
+            totalDiscount = new Amount(amount.getAmount());
+        }
+
+        return amount.minus(totalDiscount);
     }
 
     /**

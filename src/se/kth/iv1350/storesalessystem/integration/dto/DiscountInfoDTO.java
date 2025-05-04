@@ -61,9 +61,4 @@ public class DiscountInfoDTO {
     public boolean isApplicable(){
         return discountAmount.getAmount() > 0 || discountPercentage > 0;
     }
-
-    public Amount calculateDiscountValue(Amount totalAmount){
-        double percentageValue = totalAmount.getAmount() * (discountPercentage / 100.0);
-        return new Amount(percentageValue + discountAmount.getAmount());
-    }
 }
