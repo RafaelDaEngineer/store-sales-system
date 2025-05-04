@@ -54,7 +54,7 @@ public class View {
      * @param change The change amount.
      */
     public void displayChange(Amount change){
-        System.out.println("Change: " + formatAmount(change.getAmount()) + " SEK");
+        System.out.println("Change: " + formatAmount(change.getAmount()));
     }
 
     private String formatAmount(double amount){
