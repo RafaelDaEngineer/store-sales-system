@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
@@ -28,7 +29,7 @@ public class Sale {
      *
      * @param saleID The unique identifier for this sale.
      */
-    public Sale(int saleID){
+    public Sale(int saleID) {
         this.saleID = saleID;
         this.saleTime = LocalDateTime.now();
         this.items = new ArrayList<>();
@@ -41,10 +42,10 @@ public class Sale {
      * Adds an item to the current sale along with its specified quantity.
      * Updates the running total of the sale based on the added item.
      *
-     * @param item The item to be added to the sale, represented as an ItemDTO.
+     * @param item     The item to be added to the sale, represented as an ItemDTO.
      * @param quantity The quantity of the item to be added.
      */
-    public void addItem(ItemDTO item, int quantity){
+    public void addItem(ItemDTO item, int quantity) {
         SaleItem saleItem = new SaleItem(item, quantity);
         items.add(saleItem);
         updateRunningTotal();
@@ -58,7 +59,7 @@ public class Sale {
      * - The total price of all items.
      * - The total VAT of all items.
      */
-    public void updateRunningTotal(){
+    public void updateRunningTotal() {
         Amount newTotal = new Amount();
         Amount newVAT = new Amount();
         Amount newRunningTotal = new Amount();
@@ -78,7 +79,7 @@ public class Sale {
      *
      * @param customerID The unique identifier for the customer participating in this sale.
      */
-    public void setCustomerID(int customerID){
+    public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }
 
@@ -88,9 +89,9 @@ public class Sale {
      *
      * @return A {@code SaleInfoDTO} object containing summarized details of the current sale.
      */
-    public SaleInfoDTO getSaleInfo(){
+    public SaleInfoDTO getSaleInfo() {
         List<ItemDTO> itemDTOs = new ArrayList<>();
-        for (SaleItem item : items){
+        for (SaleItem item : items) {
             itemDTOs.add(item.getItemDTO());
         }
         return new SaleInfoDTO(saleID, runningTotal, itemDTOs, customerID, totalVAT);
@@ -102,7 +103,7 @@ public class Sale {
      *
      * @return The total monetary amount after the discount, represented as an {@code Amount} object.
      */
-    public Amount getTotalAfterDiscount(){
+    public Amount getTotalAfterDiscount() {
         return saleDiscount.applyDiscountTo(runningTotal);
     }
 
@@ -113,7 +114,7 @@ public class Sale {
      *
      * @return The total VAT as an {@code Amount} object.
      */
-    public Amount getTotalVAT(){
+    public Amount getTotalVAT() {
         return new Amount(totalVAT.getAmount());
     }
 
@@ -122,7 +123,7 @@ public class Sale {
      *
      * @return The creation timestamp of the sale as a {@code LocalDateTime} object.
      */
-    public LocalDateTime getSaleTime(){
+    public LocalDateTime getSaleTime() {
         return saleTime;
     }
 
@@ -141,7 +142,7 @@ public class Sale {
      *
      * @return The sale ID as an integer value.
      */
-    public int getSaleID(){
+    public int getSaleID() {
         return saleID;
     }
 
@@ -166,25 +167,20 @@ public class Sale {
      * If the item exists, its quantity is updated by the specified amount,
      * and the running total is recalculated.
      *
-     * @param itemID The unique identifier of the item whose quantity should be increased.
+     * @param itemID             The unique identifier of the item whose quantity should be increased.
      * @param additionalQuantity The amount by which the item's quantity should be increased.
      */
     public void increaseItemQuantity(String itemID, int additionalQuantity) {
         SaleItem existingItem = findItemByID(itemID);
         if (existingItem != null) {
-            // Since SaleItem is immutable, we need to create a new one
-            // and replace the old one
             ItemDTO itemInfo = existingItem.getItemDTO();
             int newQuantity = existingItem.getQuantity() + additionalQuantity;
 
-            // Remove old item
             items.remove(existingItem);
 
-            // Add new item with updated quantity
             SaleItem updatedItem = new SaleItem(itemInfo, newQuantity);
             items.add(updatedItem);
 
-            // Update running total
             updateRunningTotal();
         }
     }

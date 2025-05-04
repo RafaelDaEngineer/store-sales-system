@@ -11,7 +11,6 @@ import se.kth.iv1350.storesalessystem.view.View;
 
 public class Main {
     public static void main(String[] args) {
-        // Create the systems
         InventorySystem inventorySystem = new InventorySystem();
         DiscountDatabase discountDatabase = new DiscountDatabase();
         AccountingSystem accountingSystem = new AccountingSystem();
@@ -19,15 +18,13 @@ public class Main {
 
         populateInventory(inventorySystem);
 
-        // Create the controller
         Controller controller = new Controller(
-            inventorySystem, 
-            discountDatabase, 
-            accountingSystem, 
-            printer
+                inventorySystem,
+                discountDatabase,
+                accountingSystem,
+                printer
         );
-        
-        // Create the view
+
         View view = new View(controller);
 
         System.out.println("=== Starting New Sale ===");
@@ -35,14 +32,11 @@ public class Main {
 
         System.out.println("\n=== Scanning Items ===");
 
-        // Scan Wagyu Steak (1 quantity)
         scanItemIndividually(controller, view, "A1", 1);
 
-        // Scan Eggs (2 quantity)
-        scanItemIndividually(controller, view, "BBL304", 2);
+        scanItemIndividually(controller, view, "ABC123", 2);
 
-        // Scan Water (5 quantity)
-        scanItemIndividually(controller, view, "H2O", 5);
+        scanItemIndividually(controller, view, "H2O", 1);
 
         System.out.println("\n=== End Sale ===");
         Amount totalPrice = controller.endSale();
@@ -66,9 +60,9 @@ public class Main {
      * the current total, and shows the VAT and other relevant sale information.
      *
      * @param controller The {@link Controller} instance responsible for managing the sale process and item entry.
-     * @param view The {@link View} instance used to display item and sale information to the user.
-     * @param itemID The unique identifier of the item to be scanned.
-     * @param quantity The number of times the item should be scanned.
+     * @param view       The {@link View} instance used to display item and sale information to the user.
+     * @param itemID     The unique identifier of the item to be scanned.
+     * @param quantity   The number of times the item should be scanned.
      */
     private static void scanItemIndividually(Controller controller, View view, String itemID, int quantity) {
         for (int i = 0; i < quantity; i++) {
@@ -92,9 +86,9 @@ public class Main {
      *                  items will be added. This instance will store the added items
      *                  and allow their retrieval and management.
      */
-    private static void populateInventory(InventorySystem inventory){
+    private static void populateInventory(InventorySystem inventory) {
         inventory.addItem(new ItemDTO("A1", "Steak", "Japanese Wagyu 250g", 0.25, new Amount(799.0)));
-        inventory.addItem(new ItemDTO("BBL304", "Eggs", "12-Pack Eggs", 0.12, new Amount(129.90)));
+        inventory.addItem(new ItemDTO("ABC123", "Eggs", "12-Pack Eggs", 0.12, new Amount(129.90)));
         inventory.addItem(new ItemDTO("H2O", "Water", "1 Liter", 0.06, new Amount(19.50)));
     }
 }
