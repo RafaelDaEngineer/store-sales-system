@@ -28,7 +28,7 @@ class ControllerTest {
     }
 
     @Test
-    void testStartSale(){
+    void testStartSale() {
         controller.startSale();
         Amount total = controller.getCurrentTotal();
         assertNotNull(total, "Total should not be null after starting a sale");
@@ -36,11 +36,11 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemSuccess(){
+    void testEnterItemSuccess() {
         controller.startSale();
         ItemDTO result = controller.enterItem("1", 1);
         assertNotNull(result, "Item should be found in inventory");
-        assertEquals("Test Item", result.getName(), "Item name should match");
+        assertEquals("Test Item", result.name(), "Item name should match");
 
         Amount actualTotal = controller.getCurrentTotal();
 
@@ -49,14 +49,14 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemNotFound(){
+    void testEnterItemNotFound() {
         controller.startSale();
         ItemDTO result = controller.enterItem("999", 1);
         assertNull(result, "Item should not be found in inventory");
     }
 
     @Test
-    void testEnterMultipleOfTheSameItem(){
+    void testEnterMultipleOfTheSameItem() {
         controller.startSale();
         controller.enterItem("1", 1);
         controller.enterItem("1", 2);
@@ -67,7 +67,7 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemWithQuantity(){
+    void testEnterItemWithQuantity() {
         controller.startSale();
         controller.enterItem("1", 3);
 
@@ -77,7 +77,7 @@ class ControllerTest {
     }
 
     @Test
-    void testEndSale(){
+    void testEndSale() {
         controller.startSale();
         controller.enterItem("1", 1);
         Amount total = controller.endSale();
@@ -87,7 +87,7 @@ class ControllerTest {
     }
 
     @Test
-    void testMakePayment(){
+    void testMakePayment() {
         controller.startSale();
         controller.enterItem("1", 1);
         Amount paidAmount = new Amount(200);
@@ -98,7 +98,7 @@ class ControllerTest {
     }
 
     @Test
-    void testGetTotalWithVAT(){
+    void testGetTotalWithVAT() {
         controller.startSale();
         controller.enterItem("1", 1);
 
@@ -108,12 +108,12 @@ class ControllerTest {
     }
 
     @Test
-    void testRequestDiscount(){
+    void testRequestDiscount() {
         // This test is a little more complex because we can't easily mock the DiscountDatabase
         // Instead we'll just verify that the method doesn't throw exceptions
         controller.startSale();
         controller.enterItem("1", 1);
 
-        assertDoesNotThrow( () -> controller.requestDiscount(12345), "Request discount should not throw an exception");
+        assertDoesNotThrow(() -> controller.requestDiscount(12345), "Request discount should not throw an exception");
     }
 }

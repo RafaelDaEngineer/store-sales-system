@@ -11,20 +11,15 @@ import se.kth.iv1350.storesalessystem.model.Amount;
  * The primary usage of this class is to transfer information regarding a specific purchase
  * within the store sales system.
  */
-public class ReceiptItemDTO {
-    private final ItemDTO item;
-    private final int quantity;
-
+public record ReceiptItemDTO(ItemDTO item, int quantity) {
     /**
      * Instantiates a new {@code ReceiptItemDTO}, representing an item included in a receipt.
      *
-     * @param item The {@code ItemDTO} representing the details of the item being purchased,
-     *             such as its name, description, price, and tax rate.
+     * @param item     The {@code ItemDTO} representing the details of the item being purchased,
+     *                 such as its name, description, price, and tax rate.
      * @param quantity The quantity of the item purchased in the sale.
      */
-    public ReceiptItemDTO(ItemDTO item, int quantity){
-        this.item = item;
-        this.quantity = quantity;
+    public ReceiptItemDTO {
     }
 
     /**
@@ -32,7 +27,8 @@ public class ReceiptItemDTO {
      *
      * @return The {@code ItemDTO} representing the details of the item associated with this receipt item.
      */
-    public ItemDTO getItem(){
+    @Override
+    public ItemDTO item() {
         return item;
     }
 
@@ -41,7 +37,8 @@ public class ReceiptItemDTO {
      *
      * @return The quantity of the item associated with this receipt item.
      */
-    public int getQuantity(){
+    @Override
+    public int quantity() {
         return quantity;
     }
 
@@ -50,7 +47,7 @@ public class ReceiptItemDTO {
      *
      * @return The total price as an {@code Amount} object, which represents the product of the item's price and the quantity purchased.
      */
-    public Amount getTotalPrice(){
-        return item.getPrice().multiply(quantity);
+    public Amount getTotalPrice() {
+        return item.price().multiply(quantity);
     }
 }

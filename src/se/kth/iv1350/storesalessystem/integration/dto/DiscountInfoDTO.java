@@ -7,19 +7,16 @@ import se.kth.iv1350.storesalessystem.model.Amount;
  * This class encapsulates information related to a discount, such as the discount amount,
  * percentage, and type, ensuring immutability and safe encapsulation.
  */
-public class DiscountInfoDTO {
-    private final Amount discountAmount;
-    private final int discountPercentage;
-    private final String discountType;
+public record DiscountInfoDTO(Amount discountAmount, int discountPercentage, String discountType) {
 
     /**
      * Creates a new instance of DiscountInfoDTO with the specified discount amount, percentage, and type.
      *
-     * @param discountAmount The monetary value of the discount. This is represented as an {@code Amount} object.
+     * @param discountAmount     The monetary value of the discount. This is represented as an {@code Amount} object.
      * @param discountPercentage The percentage value of the discount, represented as an integer.
-     * @param discountType The type of the discount, represented as a string.
+     * @param discountType       The type of the discount, represented as a string.
      */
-    public DiscountInfoDTO(Amount discountAmount, int discountPercentage, String discountType){
+    public DiscountInfoDTO(Amount discountAmount, int discountPercentage, String discountType) {
         this.discountAmount = new Amount(discountAmount.getAmount());
         this.discountPercentage = discountPercentage;
         this.discountType = discountType;
@@ -33,7 +30,7 @@ public class DiscountInfoDTO {
      * - A discount type of "none".
      * This constructor is used when no specific discount information is provided or available.
      */
-    public DiscountInfoDTO(){
+    public DiscountInfoDTO() {
         this(new Amount(0), 0, "none");
     }
 
@@ -43,7 +40,7 @@ public class DiscountInfoDTO {
      *
      * @return A new {@code Amount} object containing the fixed discount value.
      */
-    public Amount getDiscountAmount(){
+    public Amount getDiscountAmount() {
         return new Amount(discountAmount.getAmount());
     }
 
@@ -54,7 +51,7 @@ public class DiscountInfoDTO {
      *
      * @return The discount percentage as an integer.
      */
-    public int getDiscountPercentage(){
+    public int getDiscountPercentage() {
         return discountPercentage;
     }
 
@@ -64,7 +61,7 @@ public class DiscountInfoDTO {
      *
      * @return The type of the discount as a string.
      */
-    public String getDiscountType(){
+    public String getDiscountType() {
         return discountType;
     }
 
@@ -74,9 +71,9 @@ public class DiscountInfoDTO {
      * or if its discount percentage is greater than zero.
      *
      * @return {@code true} if the discount has a positive monetary amount or a positive percentage,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
-    public boolean isApplicable(){
+    public boolean isApplicable() {
         return discountAmount.getAmount() > 0 || discountPercentage > 0;
     }
 }

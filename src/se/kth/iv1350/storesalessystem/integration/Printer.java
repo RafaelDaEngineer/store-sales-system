@@ -1,6 +1,7 @@
 package se.kth.iv1350.storesalessystem.integration;
 
 import java.util.List;
+
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptDTO;
 
@@ -8,7 +9,7 @@ import se.kth.iv1350.storesalessystem.model.dto.ReceiptDTO;
  * The Printer class is responsible for generating and printing receipts.
  */
 public class Printer {
-    public Printer(){
+    public Printer() {
 
     }
 
@@ -17,25 +18,25 @@ public class Printer {
      * total amount, VAT, payment, and change.
      *
      * @param receiptData A {@link ReceiptDTO} object containing the sale information,
-     * including the date and time, items purchased, total amount, VAT, total paid, and change.
+     *                    including the date and time, items purchased, total amount, VAT, total paid, and change.
      */
-    public void printReceipt(ReceiptDTO receiptData){
+    public void printReceipt(ReceiptDTO receiptData) {
         System.out.println("------------------------ Begin receipt ------------------------");
-        System.out.println("Time of Sale: " + formatDateTime(receiptData.getDateTime()) + "\n");
+        System.out.println("Time of Sale: " + formatDateTime(receiptData.dateTime()) + "\n");
 
-        List<ReceiptItemDTO> items = receiptData.getItems();
+        List<ReceiptItemDTO> items = receiptData.items();
         for (ReceiptItemDTO item : items) {
             System.out.printf("%s\t\t %d x %.2f\t\t %s SEK%n",
-                            item.getItem().getName(),
-                            item.getQuantity(),
-                            item.getItem().getPrice().getAmount(),
-                            formatAmount(item.getTotalPrice().getAmount()));
+                    item.item().name(),
+                    item.quantity(),
+                    item.item().price().getAmount(),
+                    formatAmount(item.getTotalPrice().getAmount()));
         }
         System.out.println();
-        System.out.println("Total: " + formatAmount(receiptData.getTotalAmount().getAmount()) + " SEK");
-        System.out.println("VAT: " + formatAmount(receiptData.getTotalVAT().getAmount()) + "\n");
-        System.out.println("Cash: " + formatAmount(receiptData.getTotalPaid().getAmount()) + " SEK");
-        System.out.println("Change: " + formatAmount(receiptData.getChange().getAmount()) + " SEK");
+        System.out.println("Total: " + formatAmount(receiptData.totalAmount().getAmount()) + " SEK");
+        System.out.println("VAT: " + formatAmount(receiptData.totalVAT().getAmount()) + "\n");
+        System.out.println("Cash: " + formatAmount(receiptData.totalPaid().getAmount()) + " SEK");
+        System.out.println("Change: " + formatAmount(receiptData.change().getAmount()) + " SEK");
         System.out.println("------------------------ End receipt --------------------------");
     }
 
@@ -45,9 +46,9 @@ public class Printer {
      *
      * @param amount The monetary amount to be formatted.
      * @return A string representing the formatted amount, with two decimal places and a colon
-     *         instead of a decimal point.
+     * instead of a decimal point.
      */
-    private String formatAmount(double amount){
+    private String formatAmount(double amount) {
         return String.format("%.2f", amount).replace(".", ":");
     }
 
@@ -59,7 +60,7 @@ public class Printer {
      * @param dateTime The original date and time string, expected in the format "YYYY-MM-DDTHH:MM:SS".
      * @return A formatted string representing the date and time in the format "YYYY-MM-DD HH:MM".
      */
-    private String formatDateTime(String dateTime){
-        return dateTime.substring(0,10) + " " + dateTime.substring(11,16);
+    private String formatDateTime(String dateTime) {
+        return dateTime.substring(0, 10) + " " + dateTime.substring(11, 16);
     }
 }

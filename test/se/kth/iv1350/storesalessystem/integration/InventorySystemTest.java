@@ -22,31 +22,31 @@ class InventorySystemTest {
     }
 
     @Test
-    void testGetItemInfoExistingItem(){
+    void testGetItemInfoExistingItem() {
         ItemDTO result = inventorySystem.getItemInfo("1");
         assertNotNull(result, "Should find item with ID 1");
-        assertEquals("Test Item", result.getName(), "Item name should match");
-        assertEquals(100.0, result.getPrice().getAmount(), "Item price should match");
+        assertEquals("Test Item", result.name(), "Item name should match");
+        assertEquals(100.0, result.price().getAmount(), "Item price should match");
     }
 
     @Test
-    void testGetItemInfoNonExistingItem(){
+    void testGetItemInfoNonExistingItem() {
         ItemDTO result = inventorySystem.getItemInfo("999");
         assertNull(result, "Should return null for non-existing item");
     }
 
     @Test
-    void testAddItem(){
+    void testAddItem() {
         ItemDTO newItem = new ItemDTO("2", "New Item", "New Description", 0.12, new Amount(50));
         inventorySystem.addItem(newItem);
 
         ItemDTO result = inventorySystem.getItemInfo("2");
         assertNotNull(result, "Should find newly added item with ID 2");
-        assertEquals("New Item", result.getName(), "Item name should match");
+        assertEquals("New Item", result.name(), "Item name should match");
     }
 
     @Test
-    void testUpdateInventory(){
+    void testUpdateInventory() {
         // This method is empty in the implementation, but we'll test that it doesn't throw exceptions
         SaleInfoDTO saleInfo = new SaleInfoDTO(
                 1, new Amount(100), Collections.singletonList(testItem), 0, new Amount(25)

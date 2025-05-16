@@ -17,26 +17,26 @@ class SaleItemTest {
     }
 
     @Test
-    void testGetTotalPrice(){
+    void testGetTotalPrice() {
         Amount expectedPrice = new Amount(300);
         assertEquals(expectedPrice.getAmount(), saleItem.getTotalPrice().getAmount(), "Total price should be items * quantity");
     }
 
     @Test
-    void testGetTotalVAT(){
+    void testGetTotalVAT() {
         Amount expectedVAT = new Amount(75);
         assertEquals(expectedVAT.getAmount(), saleItem.getTotalVAT().getAmount(), "Total VAT should be items * quantity * VAT");
     }
 
     @Test
-    void testGetItemDTO(){
+    void testGetItemDTO() {
         ItemDTO retrievedDTO = saleItem.getItemDTO();
-        assertEquals(itemDTO.getItemID(), retrievedDTO.getItemID(), "ItemDTO should be the same as the one passed to the constructor");
-        assertEquals(itemDTO.getName(), retrievedDTO.getName(), "ItemDTO should be the same as the one passed to the constructor");
+        assertEquals(itemDTO.itemID(), retrievedDTO.itemID(), "ItemDTO should be the same as the one passed to the constructor");
+        assertEquals(itemDTO.name(), retrievedDTO.name(), "ItemDTO should be the same as the one passed to the constructor");
     }
 
     @Test
-    void testGetQuantity(){
+    void testGetQuantity() {
         assertEquals(3, saleItem.getQuantity(), "Quantity should be the same as the one passed to the constructor");
     }
 }

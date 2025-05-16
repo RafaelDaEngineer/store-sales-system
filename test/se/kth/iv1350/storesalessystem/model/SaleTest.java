@@ -15,24 +15,24 @@ class SaleTest {
     private ItemDTO anotherTestItem;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         sale = new Sale(1);
         testItem = new ItemDTO("1", "Item 1", "Description 1", 0.25, new Amount(100));
         anotherTestItem = new ItemDTO("2", "Item 2", "Description 2", 0.12, new Amount(50));
     }
 
     @Test
-    void testAddItem(){
+    void testAddItem() {
         sale.addItem(testItem, 1);
         assertEquals(1, sale.getItems().size(), "Sale should contain one item");
 
         SaleItem saleItem = sale.getItems().getFirst();
-        assertEquals("1", saleItem.getItemDTO().getItemID(), "Item ID should match");
+        assertEquals("1", saleItem.getItemDTO().itemID(), "Item ID should match");
         assertEquals(1, saleItem.getQuantity(), "Sale should contain correct quantity");
     }
 
     @Test
-    void testUpdateRunningTotal(){
+    void testUpdateRunningTotal() {
         sale.addItem(testItem, 2); // 2 * 100 = 200
         sale.addItem(anotherTestItem, 3); // 3 * 50 = 150
         // Total: 350
@@ -51,14 +51,14 @@ class SaleTest {
 
         SaleItem foundItem = sale.findItemByID("1");
         assertNotNull(foundItem, "Item should be found");
-        assertEquals("Item 1", foundItem.getItemDTO().getName(), "Item name should match");
+        assertEquals("Item 1", foundItem.getItemDTO().name(), "Item name should match");
 
         SaleItem notFoundItem = sale.findItemByID("999");
         assertNull(notFoundItem, "Item should not be found with ID 999");
     }
 
     @Test
-    void testIncreaseItemQuantity(){
+    void testIncreaseItemQuantity() {
         sale.addItem(testItem, 1);
         sale.increaseItemQuantity("1", 2);
 
@@ -70,7 +70,7 @@ class SaleTest {
     }
 
     @Test
-    void testApplySaleDiscount(){
+    void testApplySaleDiscount() {
         sale.addItem(testItem, 2);
 
         DiscountInfoDTO discountInfo = new DiscountInfoDTO(new Amount(20), 10, "Test Discount");
@@ -83,13 +83,13 @@ class SaleTest {
     }
 
     @Test
-    void testSetCustomerID(){
+    void testSetCustomerID() {
         sale.setCustomerID(12345);
         assertEquals(12345, sale.getSaleInfo().getCustomerID(), "Customer ID should be set correctly");
     }
 
     @Test
-    void testGetSaleTime(){
+    void testGetSaleTime() {
         LocalDateTime before = LocalDateTime.now().minusSeconds(1);
         Sale newSale = new Sale(2);
         LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -98,7 +98,7 @@ class SaleTest {
     }
 
     @Test
-    void testGetSaleID(){
+    void testGetSaleID() {
         assertEquals(1, sale.getSaleID(), "Sale ID should match the cunstructer argument");
     }
 }

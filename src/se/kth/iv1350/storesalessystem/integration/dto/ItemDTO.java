@@ -8,28 +8,22 @@ import se.kth.iv1350.storesalessystem.model.Amount;
  * including its ID, name, description, tax rate, and price.
  * The purpose of this class is to securely transfer item information within the application.
  */
-public class ItemDTO {
-    private final String description;
-    private final String name;
-    private final double tax;
-    private final Amount price;
-    private final String itemID;
-
+public record ItemDTO(String itemID, String name, String description, double tax, Amount price) {
     /**
      * Creates a new instance of {@code ItemDTO} to represent an item in the sales system.
      *
-     * @param itemID The unique identifier for the item. This is used to distinguish the item within the inventory system.
-     * @param name The name of the item, describing what the item is.
+     * @param itemID      The unique identifier for the item. This is used to distinguish the item within the inventory system.
+     * @param name        The name of the item, describing what the item is.
      * @param description A brief description of the item, providing additional details about its characteristics.
-     * @param tax The tax rate applicable to the item, represented as a decimal (e.g., 0.25 for 25% tax).
-     * @param price The price of the item represented as an {@code Amount} object. A defensive copy of this object will be created.
+     * @param tax         The tax rate applicable to the item, represented as a decimal (e.g., 0.25 for 25% tax).
+     * @param price       The price of the item represented as an {@code Amount} object. A defensive copy of this object will be created.
      */
     public ItemDTO(String itemID, String name, String description, double tax, Amount price) {
         this.itemID = itemID;
         this.name = name;
         this.description = description;
         this.tax = tax;
-        this.price = new Amount(price.getAmount()); // Defensive copy.
+        this.price = new Amount(price.getAmount());
     }
 
     /**
@@ -37,7 +31,8 @@ public class ItemDTO {
      *
      * @return The item ID as a string.
      */
-    public String getItemID(){
+    @Override
+    public String itemID() {
         return itemID;
     }
 
@@ -46,31 +41,38 @@ public class ItemDTO {
      *
      * @return The name of the item as a string.
      */
-    public String getName() {
+    @Override
+    public String name() {
         return name;
     }
 
     /**
      * Get the item's description.
+     *
      * @return The item's description.
      */
-    public String getDescription(){
+    @Override
+    public String description() {
         return description;
     }
 
     /**
      * Get the item's tax rate.
+     *
      * @return The item's tax rate.
      */
-    public double getTax(){
+    @Override
+    public double tax() {
         return tax;
     }
 
     /**
      * Get the item's price.
+     *
      * @return A copy of the item's price to protect encapsulation.
      */
-    public Amount getPrice(){
+    @Override
+    public Amount price() {
         return new Amount(price.getAmount());
     }
 }

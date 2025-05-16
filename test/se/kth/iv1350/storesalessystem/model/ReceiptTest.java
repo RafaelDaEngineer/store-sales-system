@@ -22,34 +22,34 @@ class ReceiptTest {
     }
 
     @Test
-    void testCalculateChange(){
+    void testCalculateChange() {
         Amount expectedChange = new Amount(50); // 300 - (2 * 100 + 25% VAT) = 300 -250 = 50:
         assertEquals(expectedChange.getAmount(), receipt.getChange().getAmount(), "Change should be correct");
     }
 
     @Test
-    void testCreateReceiptDTO(){
+    void testCreateReceiptDTO() {
         ReceiptDTO receiptDTO = receipt.createReceiptDTO();
 
         assertNotNull(receiptDTO, "ReceiptDTO should not be null");
-        assertEquals(1, receiptDTO.getItems().size(), "Receipt should have one item");
-        assertEquals(250.0, receiptDTO.getTotalAmount().getAmount(), "Total amount should be match");
-        assertEquals(50.0, receiptDTO.getChange().getAmount(), "Change should be match");
-        assertEquals(50.0, receiptDTO.getTotalVAT().getAmount(), "Total VAT should be match");
-        assertEquals(300.0, receiptDTO.getTotalPaid().getAmount(), "Total paid should be match");
+        assertEquals(1, receiptDTO.items().size(), "Receipt should have one item");
+        assertEquals(250.0, receiptDTO.totalAmount().getAmount(), "Total amount should be match");
+        assertEquals(50.0, receiptDTO.change().getAmount(), "Change should be match");
+        assertEquals(50.0, receiptDTO.totalVAT().getAmount(), "Total VAT should be match");
+        assertEquals(300.0, receiptDTO.totalPaid().getAmount(), "Total paid should be match");
     }
 
     @Test
-    void testGetAmountPaid(){
+    void testGetAmountPaid() {
         assertEquals(amountPaid.getAmount(), receipt.getAmountPaid().getAmount(), "Amount paid should match constructor argument");
     }
 
     @Test
-    void testDefensiveCopying(){
+    void testDefensiveCopying() {
         Amount change = receipt.getChange();
         change = change.plus(new Amount(100));
 
         Amount originalChange = receipt.getChange();
-        assertNotEquals(change.getAmount(), originalChange.getAmount(), "Modifying the returned change should not affect the original change" );
+        assertNotEquals(change.getAmount(), originalChange.getAmount(), "Modifying the returned change should not affect the original change");
     }
 }

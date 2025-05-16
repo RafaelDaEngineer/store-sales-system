@@ -13,10 +13,10 @@ public class SaleItem {
     /**
      * Creates a new instance of {@code SaleItem}, representing an item in a sale.
      *
-     * @param item The {@code ItemDTO} representing the details of the item being sold.
+     * @param item     The {@code ItemDTO} representing the details of the item being sold.
      * @param quantity The quantity of the item in this sale.
      */
-    public SaleItem(ItemDTO item, int quantity){
+    public SaleItem(ItemDTO item, int quantity) {
         this.item = item;
         this.quantity = quantity;
     }
@@ -26,8 +26,8 @@ public class SaleItem {
      *
      * @return The total price as an {@code Amount} object.
      */
-    public Amount getTotalPrice(){
-        return item.getPrice().multiply(quantity);
+    public Amount getTotalPrice() {
+        return item.price().multiply(quantity);
     }
 
     /**
@@ -37,8 +37,8 @@ public class SaleItem {
      *
      * @return The total VAT as an {@code Amount} object.
      */
-    public Amount getTotalVAT(){
-        double vatAmount = item.getPrice().getAmount() * item.getTax() * quantity;
+    public Amount getTotalVAT() {
+        double vatAmount = item.price().getAmount() * item.tax() * quantity;
         return new Amount(vatAmount);
     }
 
@@ -47,7 +47,7 @@ public class SaleItem {
      *
      * @return The {@code ItemDTO} containing the details of the item.
      */
-    public ItemDTO getItemDTO(){
+    public ItemDTO getItemDTO() {
         return item;
     }
 
@@ -56,7 +56,7 @@ public class SaleItem {
      *
      * @return The quantity of the item as an integer.
      */
-    public int getQuantity(){
+    public int getQuantity() {
         return quantity;
     }
 }

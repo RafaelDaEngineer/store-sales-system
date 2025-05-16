@@ -155,7 +155,7 @@ public class Sale {
      */
     public SaleItem findItemByID(String itemID) {
         for (SaleItem item : items) {
-            if (item.getItemDTO().getItemID().equals(itemID)) {
+            if (item.getItemDTO().itemID().equals(itemID)) {
                 return item;
             }
         }

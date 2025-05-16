@@ -34,7 +34,7 @@ public class Main {
 
         scanItemIndividually(controller, view, "A1", 1);
 
-        scanItemIndividually(controller, view, "ABC123", 2);
+        scanItemIndividually(controller, view, "ABC123a", 2);
 
         scanItemIndividually(controller, view, "H2O", 1);
 

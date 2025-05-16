@@ -2,6 +2,7 @@ package se.kth.iv1350.storesalessystem.integration;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
@@ -20,7 +21,7 @@ public class InventorySystem {
      * establishing a system to store and manage information about items
      * available for sale in the sales application.
      */
-    public InventorySystem(){
+    public InventorySystem() {
         this.inventory = new HashMap<>();
     }
 
@@ -31,9 +32,9 @@ public class InventorySystem {
      * @param itemID The unique identifier of the item to retrieve information for.
      *               If the item does not exist in the inventory, {@code null} is returned.
      * @return An {@code ItemDTO} containing information about the requested item,
-     *         or {@code null} if no item is found for the given ID.
+     * or {@code null} if no item is found for the given ID.
      */
-    public ItemDTO getItemInfo(String itemID){
+    public ItemDTO getItemInfo(String itemID) {
         return inventory.get(itemID);
     }
 
@@ -46,7 +47,7 @@ public class InventorySystem {
      *             name, description, price, and tax rate.
      */
     public void addItem(ItemDTO item) {
-        inventory.put(item.getItemID(), item);
+        inventory.put(item.itemID(), item);
     }
 
     /**
@@ -56,6 +57,6 @@ public class InventorySystem {
      * @param saleInfoDTO The data transfer object containing information about the completed sale.
      *                    This includes details such as the sold items, total amount, and VAT.
      */
-    public void updateInventory(SaleInfoDTO saleInfoDTO){
+    public void updateInventory(SaleInfoDTO saleInfoDTO) {
     }
 }

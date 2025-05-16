@@ -15,7 +15,7 @@ public class View {
      *
      * @param controller The controller this view uses for operations.
      */
-    public View(Controller controller){
+    public View(Controller controller) {
         this.controller = controller;
     }
 
@@ -24,12 +24,12 @@ public class View {
      *
      * @param itemInfo The item to display.
      */
-    public void displayItem(ItemDTO itemInfo){
-        System.out.println("Item ID: " + itemInfo.getItemID());
-        System.out.println("Item name: " + itemInfo.getName());
-        System.out.println("Item cost: " + formatAmount(itemInfo.getPrice().getAmount()) + " SEK");
-        System.out.println("VAT: " + (int)(itemInfo.getTax() * 100) + "%");
-        System.out.println("Item description: " + itemInfo.getDescription());
+    public void displayItem(ItemDTO itemInfo) {
+        System.out.println("Item ID: " + itemInfo.itemID());
+        System.out.println("Item name: " + itemInfo.name());
+        System.out.println("Item cost: " + formatAmount(itemInfo.price().getAmount()) + " SEK");
+        System.out.println("VAT: " + (int) (itemInfo.tax() * 100) + "%");
+        System.out.println("Item description: " + itemInfo.description());
         System.out.println();
     }
 
@@ -38,7 +38,7 @@ public class View {
      *
      * @param total The change amount.
      */
-    public void displayCurrentTotal(Amount total){
+    public void displayCurrentTotal(Amount total) {
         System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
         System.out.println();
     }
@@ -53,11 +53,11 @@ public class View {
      *
      * @param change The change amount.
      */
-    public void displayChange(Amount change){
+    public void displayChange(Amount change) {
         System.out.println("Change: " + formatAmount(change.getAmount()));
     }
 
-    private String formatAmount(double amount){
+    private String formatAmount(double amount) {
         return String.format("%.2f", amount).replace(".", ":") + " SEK";
     }
 }
