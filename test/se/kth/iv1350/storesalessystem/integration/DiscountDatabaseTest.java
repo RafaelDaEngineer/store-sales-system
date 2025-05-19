@@ -17,8 +17,8 @@ class DiscountDatabaseTest {
     private SaleInfoDTO saleInfo;
 
     @BeforeEach
-    void setUp(){
-        discountDatabase = new DiscountDatabase();
+    void setUp() {
+        discountDatabase = DiscountDatabase.getInstance();
 
         List<ItemDTO> items = new ArrayList<>();
         items.add(new ItemDTO("1", "Test Item", "Description", 0.25, new Amount(100)));
@@ -26,14 +26,14 @@ class DiscountDatabaseTest {
     }
 
     @Test
-    void testFindDiscount(){
-        // Since the implementation is just a placeholder, we can only verify it doesn't throw
-        // exceptions and returns a non-null object
+    void testFindDiscount() {
+        // Customer ID 12345 falls in the 10000-19999 range, which gets a percentage discount
         DiscountInfoDTO discountInfo = discountDatabase.findDiscount(12345, saleInfo);
 
         assertNotNull(discountInfo, "Discount info should not be null");
-        // Default placeholder implementation returns empty discount
-        assertFalse(discountInfo.isApplicable(), "Placeholder discount should not be applicable");
+        assertTrue(discountInfo.isApplicable(), "Discount should be applicable for customer ID 12345");
+        assertEquals(10, discountInfo.getDiscountPercentage(), "Should have 10% discount");
+        assertEquals("Percentage Discount", discountInfo.getDiscountType(), "Should be percentage discount");
     }
 
 }

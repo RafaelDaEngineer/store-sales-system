@@ -160,6 +160,25 @@ public class Sale {
     }
 
     /**
+     * Gets the description of the discount that has been applied to the sale.
+     *
+     * @return A string describing the current discount, or "No discount" if
+     * no discount has been applied.
+     */
+    public String getDiscountDescription() {
+        return saleDiscount.getDiscountDescription();
+    }
+
+    /**
+     * Gets the running total before any discount is applied.
+     *
+     * @return The running total as an Amount object.
+     */
+    public Amount getRunningTotal() {
+        return new Amount(runningTotal.getAmount());
+    }
+
+    /**
      * Increases the quantity of a specific item in the current sale.
      * If the item exists, its quantity is updated by the specified amount,
      * and the running total is recalculated.

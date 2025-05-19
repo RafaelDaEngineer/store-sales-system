@@ -1,16 +1,20 @@
 package se.kth.iv1350.storesalessystem.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a cash register for handling payments and maintaining a running balance.
  */
 public class CashRegister {
     private Amount balance;
+    private final List<TotalRevenueObserver> observers = new ArrayList<>();
 
     /**
      * Creates a new instance of the CashRegister class.
      * Initializes the cash register with a balance of zero.
      */
-    public CashRegister(){
+    public CashRegister() {
         this.balance = new Amount();
     }
 
@@ -21,6 +25,7 @@ public class CashRegister {
      */
     public void addPayment(Amount payment) {
         this.balance = balance.plus(payment);
+        notifyObservers(payment);
     }
 
     /**
@@ -30,5 +35,19 @@ public class CashRegister {
      */
     public Amount getBalance() {
         return new Amount(balance.getAmount());
+    }
+
+    public void addObserver(TotalRevenueObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(TotalRevenueObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers(Amount payment) {
+        for (TotalRevenueObserver observer : observers) {
+            observer.newPayment(payment);
+        }
     }
 }

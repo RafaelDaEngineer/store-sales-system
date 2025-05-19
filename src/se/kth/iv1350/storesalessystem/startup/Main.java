@@ -5,23 +5,18 @@ import se.kth.iv1350.storesalessystem.integration.*;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
 import se.kth.iv1350.storesalessystem.model.IdentifierException;
+import se.kth.iv1350.storesalessystem.util.ErrorLogger;
 import se.kth.iv1350.storesalessystem.view.View;
 
 public class Main {
     public static void main(String[] args) {
         InventorySystem inventorySystem = new InventorySystem();
-        DiscountDatabase discountDatabase = new DiscountDatabase();
         AccountingSystem accountingSystem = new AccountingSystem();
         Printer printer = new Printer();
 
         populateInventory(inventorySystem);
 
-        Controller controller = new Controller(
-                inventorySystem,
-                discountDatabase,
-                accountingSystem,
-                printer
-        );
+        Controller controller = new Controller(inventorySystem, accountingSystem, printer);
 
         View view = new View(controller);
 
@@ -33,12 +28,29 @@ public class Main {
         scanItemIndividually(controller, view, "A1", 1);
         scanItemIndividually(controller, view, "ABC123", 2);
         scanItemIndividually(controller, view, "H2O", 1);
+
+        System.out.println("\n=== Before Discount ===");
+        Amount beforeDiscount = controller.getCurrentTotal();
+        System.out.println("Total before discount: " + beforeDiscount.getAmount() + " SEK");
+
+        System.out.println("\n=== Applying Discount ===");
+        int customerID = 25000; // This ID should get a fixed discount based on your DiscountDatabase
+        controller.requestDiscount(customerID);
+
+        System.out.println("\n=== After Discount ===");
+        Amount originalTotal = controller.getOriginalTotal();
+        Amount afterDiscount = controller.getCurrentTotal();
+        String discountDescription = controller.getDiscountDescription();
+        view.displayCurrentTotal(afterDiscount, discountDescription, originalTotal);
+
+        System.out.println("\n=== Error Handling Demo ===");
         scanItemIndividually(controller, view, "NONEXISTENT", 1);
         scanItemIndividually(controller, view, "DB-ERROR-999", 1);
 
         System.out.println("\n=== End Sale ===");
         Amount totalPrice = controller.endSale();
-        System.out.println("Total price (incl. VAT): " + totalPrice.getAmount() + " SEK");
+        System.out.println("Final price (incl VAT): " + totalPrice.getAmount() + " SEK");
+        System.out.println("Discount applied: " + controller.getDiscountDescription());
 
         System.out.println("\n=== Process Payment ===");
         Amount amountPaid = new Amount(1500.00);
@@ -70,15 +82,27 @@ public class Main {
         try {
             ItemDTO item = controller.enterItem(itemID, quantity);
             view.displayItem(item);
-            view.displayCurrentTotal(controller.getCurrentTotal());
+
+            // If there's a discount, show both original and discounted totals
+            String discountDescription = controller.getDiscountDescription();
+            if (!discountDescription.equals("No discount")) {
+                Amount originalTotal = controller.getOriginalTotal();
+                Amount afterDiscount = controller.getCurrentTotal();
+                view.displayCurrentTotal(afterDiscount, discountDescription, originalTotal);
+            } else {
+                view.displayCurrentTotal(controller.getCurrentTotal());
+            }
+
             view.displayTotalVAT();
             System.out.println("------------------------------------------\n");
         } catch (IdentifierException e) {
             System.out.println("ERROR: " + e.getUserFriendlyMessage());
             System.err.println("Technical details: " + e.getMessage());
+            e.logError();
         } catch (DatabaseException e) {
             System.out.println("ERROR: " + e.getUserFriendlyMessage());
             System.err.println("Technical details: " + e.getMessage());
+            e.logError();
         }
     }
 

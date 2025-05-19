@@ -2,58 +2,71 @@ package se.kth.iv1350.storesalessystem.model;
 
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 
+import java.util.Objects;
+
 /**
  * Represents a discount applied to a sale.
  * This class encapsulates the logic for managing and applying
  * discounts based on discount information.
  */
 public class SaleDiscount {
-    private DiscountInfoDTO discountInfo;
+    private DiscountStrategy discountStrategy;
 
     /**
      * Default constructor for the SaleDiscount class.
-     * Initializes a new instance of the SaleDiscount class with default discount information.
-     * Creates a new instance of DiscountInfoDTO with default values to represent no discount applied.
+     * Initializes a new instance of the SaleDiscount class with a no-discount strategy.
      */
-    public SaleDiscount(){
-        this.discountInfo = new DiscountInfoDTO();
+    public SaleDiscount() {
+        this.discountStrategy = new NoDiscountStrategy();
     }
 
     /**
      * Sets the discount information for the sale.
-     * Updates the current discount details with the provided {@code DiscountInfoDTO} instance.
+     * Updates the current discount strategy based on the provided {@code DiscountInfoDTO} instance.
      *
      * @param discountInfo The {@code DiscountInfoDTO} object containing discount-related information,
      *                     including the discount amount, percentage, and type.
      */
-    public void setDiscountInfo(DiscountInfoDTO discountInfo){
-        this.discountInfo = discountInfo;
+    public void setDiscountInfo(DiscountInfoDTO discountInfo) {
+        if (!discountInfo.isApplicable()) {
+            this.discountStrategy = new NoDiscountStrategy();
+            return;
+        }
+
+        DiscountStrategy percentageStrategy = null;
+        DiscountStrategy fixedStrategy = null;
+
+        if (discountInfo.getDiscountPercentage() > 0) {
+            percentageStrategy = new PercentageDiscountStrategy(discountInfo.getDiscountPercentage());
+        }
+
+        if (discountInfo.getDiscountAmount().getAmount() > 0) {
+            fixedStrategy = new FixedDiscountStrategy(discountInfo.getDiscountAmount());
+        }
+
+        if (percentageStrategy != null && fixedStrategy != null) {
+            this.discountStrategy = new CombinedDiscountStrategy(percentageStrategy, fixedStrategy);
+        } else if (percentageStrategy != null) {
+            this.discountStrategy = percentageStrategy;
+        } else this.discountStrategy = Objects.requireNonNullElseGet(fixedStrategy, NoDiscountStrategy::new);
     }
 
     /**
-     * Applies the discount defined in the {@code DiscountInfoDTO} object to the given amount.
-     * Discounts may consist of a fixed amount, a percentage, or a combination of both.
-     * If the total discount exceeds the original amount, the resulting amount is set to zero.
+     * Applies the current discount strategy to the given amount.
      *
      * @param amount The {@code Amount} object representing the original monetary value before discount.
      * @return A new {@code Amount} object representing the value after applying the discount.
      */
-    public Amount applyDiscountTo(Amount amount){
-        if(!discountInfo.isApplicable()){
-            return new Amount(amount.getAmount());
-        }
+    public Amount applyDiscountTo(Amount amount) {
+        return discountStrategy.applyDiscount(amount);
+    }
 
-        Amount fixedDiscount = discountInfo.getDiscountAmount();
-
-        double percentageDiscountRate = discountInfo.getDiscountPercentage() / 100.0;
-        Amount percentageDiscount = amount.multiply(percentageDiscountRate);
-
-        Amount totalDiscount = fixedDiscount.plus(percentageDiscount);
-
-        if(totalDiscount.getAmount() > amount.getAmount()){
-            totalDiscount = new Amount(amount.getAmount());
-        }
-
-        return amount.minus(totalDiscount);
+    /**
+     * Gets a description of the current discount strategy.
+     *
+     * @return A string describing the current discount strategy.
+     */
+    public String getDiscountDescription() {
+        return discountStrategy.getDescription();
     }
 }

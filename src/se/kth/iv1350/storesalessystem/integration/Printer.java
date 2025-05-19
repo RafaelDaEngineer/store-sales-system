@@ -34,7 +34,14 @@ public class Printer {
         }
         System.out.println();
         System.out.println("Total: " + formatAmount(receiptData.totalAmount().getAmount()) + " SEK");
-        System.out.println("VAT: " + formatAmount(receiptData.totalVAT().getAmount()) + "\n");
+        System.out.println("VAT: " + formatAmount(receiptData.totalVAT().getAmount()) + " SEK");
+
+        // Add discount information to receipt
+        if (receiptData.discountDescription() != null && !receiptData.discountDescription().equals("No discount")) {
+            System.out.println("Discount applied: " + receiptData.discountDescription());
+        }
+
+        System.out.println();
         System.out.println("Cash: " + formatAmount(receiptData.totalPaid().getAmount()) + " SEK");
         System.out.println("Change: " + formatAmount(receiptData.change().getAmount()) + " SEK");
         System.out.println("------------------------ End receipt --------------------------");

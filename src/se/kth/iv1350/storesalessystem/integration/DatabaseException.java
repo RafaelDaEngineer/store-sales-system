@@ -1,6 +1,8 @@
 package se.kth.iv1350.storesalessystem.integration;
 
 
+import se.kth.iv1350.storesalessystem.util.ErrorLogger;
+
 /**
  * Represents an exception that occurs during database operations. This class encapsulates
  * information about the failed operation and provides a user-friendly message for error handling.
@@ -8,6 +10,7 @@ package se.kth.iv1350.storesalessystem.integration;
 public class DatabaseException extends Exception {
     private final String userFriendlyMessage;
     private final String operation;
+    private final ErrorLogger logger;
 
     /**
      * Creates a new instance of DatabaseException.
@@ -22,6 +25,11 @@ public class DatabaseException extends Exception {
         super("Database operation failed: " + operation + " - Database server is unavailable");
         this.operation = operation;
         this.userFriendlyMessage = "The system is temporarily unavailable. Please try again later or contact assistance";
+        this.logger = new ErrorLogger();
+    }
+
+    public void logError() {
+        logger.logException(new Exception(), "Database operation failed: " + operation + " - Database server is unavailable");
     }
 
     public String getUserFriendlyMessage() {

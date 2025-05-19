@@ -38,6 +38,17 @@ public class View {
      *
      * @param total The change amount.
      */
+    public void displayCurrentTotal(Amount total, String discountDescription, Amount originalTotal) {
+        if (originalTotal != null && !discountDescription.equals("No discount")) {
+            System.out.println("Original total: " + formatAmount(originalTotal.getAmount()) + " SEK");
+            System.out.println("Applied discount: " + discountDescription);
+            System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
+        } else {
+            System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
+        }
+        System.out.println();
+    }
+
     public void displayCurrentTotal(Amount total) {
         System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
         System.out.println();

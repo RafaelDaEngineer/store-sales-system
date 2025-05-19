@@ -13,9 +13,10 @@ import se.kth.iv1350.storesalessystem.model.Amount;
  * including the purchased items, financial information, and transaction metadata.
  */
 public record ReceiptDTO(String dateTime, List<ReceiptItemDTO> items, Amount totalAmount, Amount totalVAT,
-                         Amount totalPaid, Amount change) {
+                         Amount totalPaid, Amount change, String discountDescription) {
     /**
      * Creates an instance of {@code ReceiptDTO}, representing the data of a completed sale.
+     * This constructor provides a default "No discount" description.
      *
      * @param dateTime    The date and time when the sale was completed.
      * @param items       The list of items purchased during the sale.
@@ -25,13 +26,15 @@ public record ReceiptDTO(String dateTime, List<ReceiptItemDTO> items, Amount tot
      * @param change      The change to be given back to the customer.
      */
     public ReceiptDTO(String dateTime, List<ReceiptItemDTO> items, Amount totalAmount, Amount totalVAT, Amount totalPaid, Amount change) {
-        this.dateTime = dateTime;
-        this.items = new ArrayList<>(items);
-        this.totalAmount = new Amount(totalAmount.getAmount());
-        this.totalVAT = new Amount(totalVAT.getAmount());
-        this.totalPaid = new Amount(totalPaid.getAmount());
-        this.change = new Amount(change.getAmount());
+        this(dateTime,
+                new ArrayList<>(items),
+                new Amount(totalAmount.getAmount()),
+                new Amount(totalVAT.getAmount()),
+                new Amount(totalPaid.getAmount()),
+                new Amount(change.getAmount()),
+                "No discount");
     }
+
 
     /**
      * Get the date and time of the sale.

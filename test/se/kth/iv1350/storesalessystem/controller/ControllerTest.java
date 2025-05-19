@@ -7,6 +7,12 @@ import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
 import se.kth.iv1350.storesalessystem.model.IdentifierException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -16,7 +22,6 @@ class ControllerTest {
     @BeforeEach
     public void setUp() {
         InventorySystem inventorySystem = new InventorySystem();
-        DiscountDatabase discountDatabase = new DiscountDatabase();
         AccountingSystem accountingSystem = new AccountingSystem();
         Printer printer = new Printer();
 
@@ -25,7 +30,7 @@ class ControllerTest {
         inventorySystem.addItem(testItem1);
         inventorySystem.addItem(testItem2);
 
-        controller = new Controller(inventorySystem, discountDatabase, accountingSystem, printer);
+        controller = new Controller(inventorySystem, accountingSystem, printer);
 
         controller.startSale();
     }
@@ -51,9 +56,10 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemNotFoundThrowsIdentifierException() {
+    void testEnterItemNotFoundThrowsIdentifierException() throws IOException {
+
         IdentifierException exception = assertThrows(IdentifierException.class, () -> controller.enterItem("NONEXISTENT", 1), "IdentifierException should be thrown for non-existent item");
-        
+
         assertEquals("NONEXISTENT", exception.getItemIdentifier(), "Identifier should match item ID");
         assertTrue(exception.getMessage().contains("NONEXISTENT"), "Exception message should contain item ID");
         assertNotNull(exception.getUserFriendlyMessage(), "User friendly message should not be null");

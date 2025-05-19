@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptDTO;
 import se.kth.iv1350.storesalessystem.model.dto.ReceiptItemDTO;
@@ -20,10 +21,10 @@ public class Receipt {
     /**
      * Creates a new {@code Receipt} instance representing the details of a completed sale.
      *
-     * @param sale The {@code Sale} object associated with this receipt, containing the details of the completed transaction.
+     * @param sale       The {@code Sale} object associated with this receipt, containing the details of the completed transaction.
      * @param amountPaid The {@code Amount} object representing the total payment made by the customer.
      */
-    public Receipt(Sale sale, Amount amountPaid){
+    public Receipt(Sale sale, Amount amountPaid) {
         this.sale = sale;
         this.amountPaid = new Amount(amountPaid.getAmount());
         this.change = calculateChange();
@@ -47,11 +48,12 @@ public class Receipt {
      *
      * @return A {@code ReceiptDTO} object that holds the summary of the completed sale.
      */
-    public ReceiptDTO createReceiptDTO(){
+    public ReceiptDTO createReceiptDTO() {
         String dateTime = formatDateTime(sale.getSaleTime());
         List<ReceiptItemDTO> receiptItems = createReceiptItems();
+        String discountDescription = sale.getDiscountDescription();
 
-        return new ReceiptDTO(dateTime, receiptItems, sale.getTotalAfterDiscount(), sale.getTotalVAT(), amountPaid, change);
+        return new ReceiptDTO(dateTime, receiptItems, sale.getTotalAfterDiscount(), sale.getTotalVAT(), amountPaid, change, discountDescription);
     }
 
     /**
@@ -61,7 +63,7 @@ public class Receipt {
      * @param dateTime The {@code LocalDateTime} object to be formatted.
      * @return A formatted date and time string.
      */
-    private String formatDateTime(LocalDateTime dateTime){
+    private String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return dateTime.format(formatter);
     }
@@ -73,11 +75,11 @@ public class Receipt {
      * are used to instantiate a {@code ReceiptItemDTO}, which is then added to the list.
      *
      * @return A list of {@code ReceiptItemDTO} objects representing the receipt items
-     *         included in the sale.
+     * included in the sale.
      */
-    private List<ReceiptItemDTO> createReceiptItems(){
+    private List<ReceiptItemDTO> createReceiptItems() {
         List<ReceiptItemDTO> result = new ArrayList<>();
-        for (SaleItem saleItem : sale.getItems()){
+        for (SaleItem saleItem : sale.getItems()) {
             ItemDTO item = saleItem.getItemDTO();
             int quantity = saleItem.getQuantity();
             result.add(new ReceiptItemDTO(item, quantity));

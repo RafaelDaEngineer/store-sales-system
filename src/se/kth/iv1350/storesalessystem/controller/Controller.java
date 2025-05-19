@@ -4,6 +4,8 @@ import se.kth.iv1350.storesalessystem.integration.*;
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.*;
+import se.kth.iv1350.storesalessystem.view.TotalRevenueFileOutput;
+import se.kth.iv1350.storesalessystem.view.TotalRevenueView;
 
 /**
  * The Controller manages the main interactions between the external systems, sale process,
@@ -25,16 +27,20 @@ public class Controller {
      * and receipt printing.
      *
      * @param inventorySystem  The system handling the store's inventory.
-     * @param discountDatabase The database providing discount information for customers.
      * @param accountingSystem The system managing accounting and financial records.
      * @param printer          The printer used to print sale receipts.
+     *                         <p>
+     *                         Note: The discount database is accessed through its singleton instance.
      */
-    public Controller(InventorySystem inventorySystem, DiscountDatabase discountDatabase, AccountingSystem accountingSystem, Printer printer) {
+    public Controller(InventorySystem inventorySystem, AccountingSystem accountingSystem, Printer printer) {
         this.inventorySystem = inventorySystem;
-        this.discountDatabase = discountDatabase;
+        this.discountDatabase = DiscountDatabase.getInstance();
         this.cashRegister = new CashRegister();
         this.receiptPrinter = new ReceiptPrinter(printer);
         this.saleLogger = new SaleLogger(accountingSystem, inventorySystem);
+
+        cashRegister.addObserver(new TotalRevenueView());
+        cashRegister.addObserver(new TotalRevenueFileOutput());
     }
 
     /**
@@ -73,7 +79,7 @@ public class Controller {
         ItemDTO itemInfo = inventorySystem.getItemInfo(itemID);
 
         try {
-            SaleItem existingItem = currentSale.findItemByID(itemID);
+            currentSale.findItemByID(itemID);
             currentSale.increaseItemQuantity(itemID, quantity);
         } catch (IdentifierException e) {
             currentSale.addItem(itemInfo, quantity);
@@ -139,6 +145,7 @@ public class Controller {
         return currentSale.getTotalAfterDiscount();
     }
 
+
     /**
      * Finalizes the current sale and retrieves the total amount after applying any discounts.
      * This method marks the end of the sale by calculating and returning the total cost,
@@ -150,4 +157,21 @@ public class Controller {
         return currentSale.getTotalAfterDiscount();
     }
 
+    /**
+     * Gets the description of the current discount applied to the sale.
+     *
+     * @return A string describing the current discount.
+     */
+    public String getDiscountDescription() {
+        return currentSale.getDiscountDescription();
+    }
+
+    /**
+     * Gets the original total amount before applying any discounts.
+     *
+     * @return The original total as an Amount object.
+     */
+    public Amount getOriginalTotal() {
+        return currentSale.getRunningTotal();
+    }
 }

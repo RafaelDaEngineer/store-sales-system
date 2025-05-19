@@ -1,11 +1,8 @@
 package se.kth.iv1350.storesalessystem.model;
 
 import se.kth.iv1350.storesalessystem.integration.AccountingSystem;
-import se.kth.iv1350.storesalessystem.integration.DatabaseException;
 import se.kth.iv1350.storesalessystem.integration.InventorySystem;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
-
-import javax.xml.crypto.Data;
 
 /**
  * The SaleLogger class is responsible for logging completed sales by updating
@@ -35,7 +32,7 @@ public class SaleLogger {
      *
      * @param sale The completed sale to be logged, containing all relevant sale information.
      */
-    public void logCompletedSale(Sale sale) throws DatabaseException {
+    public void logCompletedSale(Sale sale) {
         SaleInfoDTO saleInfo = sale.getSaleInfo();
         inventorySystem.updateInventory(saleInfo);
         accountingSystem.updateAccounting(saleInfo);
