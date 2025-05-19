@@ -2,12 +2,10 @@ package se.kth.iv1350.storesalessystem.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.kth.iv1350.storesalessystem.integration.AccountingSystem;
-import se.kth.iv1350.storesalessystem.integration.DiscountDatabase;
-import se.kth.iv1350.storesalessystem.integration.InventorySystem;
-import se.kth.iv1350.storesalessystem.integration.Printer;
+import se.kth.iv1350.storesalessystem.integration.*;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
+import se.kth.iv1350.storesalessystem.model.IdentifierException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +19,15 @@ class ControllerTest {
         DiscountDatabase discountDatabase = new DiscountDatabase();
         AccountingSystem accountingSystem = new AccountingSystem();
         Printer printer = new Printer();
+
+        ItemDTO testItem1 = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));
+        ItemDTO testItem2 = new ItemDTO("2", "Test Item 2", "Test Description 2", 0.12, new Amount(50));
+        inventorySystem.addItem(testItem1);
+        inventorySystem.addItem(testItem2);
+
         controller = new Controller(inventorySystem, discountDatabase, accountingSystem, printer);
 
-        ItemDTO testItem = new ItemDTO("1", "Test Item", "Test Description", 0.25, new Amount(100));
-        inventorySystem.addItem(testItem);
+        controller.startSale();
     }
 
     @Test
@@ -36,28 +39,36 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemSuccess() {
-        controller.startSale();
+    void testEnterItemSuccess() throws IdentifierException, DatabaseException {
         ItemDTO result = controller.enterItem("1", 1);
         assertNotNull(result, "Item should be found in inventory");
         assertEquals("Test Item", result.name(), "Item name should match");
 
         Amount actualTotal = controller.getCurrentTotal();
 
-        Amount expectedTotal = new Amount(125); // 100 + 25% VAT
+        Amount expectedTotal = new Amount(125);
         assertEquals(expectedTotal.getAmount(), actualTotal.getAmount(), "Total should include item price with VAT");
     }
 
     @Test
-    void testEnterItemNotFound() {
-        controller.startSale();
-        ItemDTO result = controller.enterItem("999", 1);
-        assertNull(result, "Item should not be found in inventory");
+    void testEnterItemNotFoundThrowsIdentifierException() {
+        IdentifierException exception = assertThrows(IdentifierException.class, () -> controller.enterItem("NONEXISTENT", 1), "IdentifierException should be thrown for non-existent item");
+        
+        assertEquals("NONEXISTENT", exception.getItemIdentifier(), "Identifier should match item ID");
+        assertTrue(exception.getMessage().contains("NONEXISTENT"), "Exception message should contain item ID");
+        assertNotNull(exception.getUserFriendlyMessage(), "User friendly message should not be null");
     }
 
     @Test
-    void testEnterMultipleOfTheSameItem() {
-        controller.startSale();
+    void testEnterItemDatabaseExceptionThrowsDatabaseException() {
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> controller.enterItem("DB-ERROR-999", 1));
+
+        assertEquals("getItemInfo", exception.getOperation(), "Operation should match");
+        assertNotNull(exception.getUserFriendlyMessage(), "User friendly message should not be null");
+    }
+
+    @Test
+    void testEnterMultipleOfTheSameItem() throws IdentifierException, DatabaseException {
         controller.enterItem("1", 1);
         controller.enterItem("1", 2);
 
@@ -67,8 +78,7 @@ class ControllerTest {
     }
 
     @Test
-    void testEnterItemWithQuantity() {
-        controller.startSale();
+    void testEnterItemWithQuantity() throws IdentifierException, DatabaseException {
         controller.enterItem("1", 3);
 
         Amount expectedTotal = new Amount(375); // 100 * 3 + 25% VAT
@@ -77,8 +87,7 @@ class ControllerTest {
     }
 
     @Test
-    void testEndSale() {
-        controller.startSale();
+    void testEndSale() throws IdentifierException, DatabaseException {
         controller.enterItem("1", 1);
         Amount total = controller.endSale();
 
@@ -87,7 +96,7 @@ class ControllerTest {
     }
 
     @Test
-    void testMakePayment() {
+    void testMakePayment() throws IdentifierException, DatabaseException {
         controller.startSale();
         controller.enterItem("1", 1);
         Amount paidAmount = new Amount(200);
@@ -98,20 +107,16 @@ class ControllerTest {
     }
 
     @Test
-    void testGetTotalWithVAT() {
-        controller.startSale();
+    void testGetTotalWithVAT() throws IdentifierException, DatabaseException {
         controller.enterItem("1", 1);
 
-        Amount expectedTotal = new Amount(25); // 25% of 100
+        Amount expectedTotal = new Amount(25);
         Amount actualTotal = controller.getTotalVAT();
         assertEquals(expectedTotal.getAmount(), actualTotal.getAmount(), "Total VAT should be calculated correctly");
     }
 
     @Test
-    void testRequestDiscount() {
-        // This test is a little more complex because we can't easily mock the DiscountDatabase
-        // Instead we'll just verify that the method doesn't throw exceptions
-        controller.startSale();
+    void testRequestDiscount() throws IdentifierException, DatabaseException {
         controller.enterItem("1", 1);
 
         assertDoesNotThrow(() -> controller.requestDiscount(12345), "Request discount should not throw an exception");

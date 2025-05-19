@@ -1,9 +1,6 @@
 package se.kth.iv1350.storesalessystem.controller;
 
-import se.kth.iv1350.storesalessystem.integration.AccountingSystem;
-import se.kth.iv1350.storesalessystem.integration.DiscountDatabase;
-import se.kth.iv1350.storesalessystem.integration.InventorySystem;
-import se.kth.iv1350.storesalessystem.integration.Printer;
+import se.kth.iv1350.storesalessystem.integration.*;
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.*;
@@ -27,12 +24,12 @@ public class Controller {
      * between the sale process, inventory system, discount database, accounting system,
      * and receipt printing.
      *
-     * @param inventorySystem The system handling the store's inventory.
+     * @param inventorySystem  The system handling the store's inventory.
      * @param discountDatabase The database providing discount information for customers.
      * @param accountingSystem The system managing accounting and financial records.
-     * @param printer The printer used to print sale receipts.
+     * @param printer          The printer used to print sale receipts.
      */
-    public Controller(InventorySystem inventorySystem, DiscountDatabase discountDatabase, AccountingSystem accountingSystem, Printer printer){
+    public Controller(InventorySystem inventorySystem, DiscountDatabase discountDatabase, AccountingSystem accountingSystem, Printer printer) {
         this.inventorySystem = inventorySystem;
         this.discountDatabase = discountDatabase;
         this.cashRegister = new CashRegister();
@@ -68,21 +65,17 @@ public class Controller {
      * If the item is already in the sale, its quantity will be increased.
      * If the item does not exist in the inventory, null is returned.
      *
-     * @param itemID The ID of the item to be added or updated in the sale.
+     * @param itemID   The ID of the item to be added or updated in the sale.
      * @param quantity Quantity of items to add to the sale.
      * @return The information about the item as an {@code ItemDTO}, or {@code null} if the item is not found in the inventory.
      */
-    public ItemDTO enterItem(String itemID, int quantity) {
+    public ItemDTO enterItem(String itemID, int quantity) throws IdentifierException, DatabaseException {
         ItemDTO itemInfo = inventorySystem.getItemInfo(itemID);
 
-        if (itemInfo == null) {
-            return null;
-        }
-
-        SaleItem existingItem = currentSale.findItemByID(itemID);
-        if (existingItem != null) {
+        try {
+            SaleItem existingItem = currentSale.findItemByID(itemID);
             currentSale.increaseItemQuantity(itemID, quantity);
-        } else {
+        } catch (IdentifierException e) {
             currentSale.addItem(itemInfo, quantity);
         }
 
@@ -111,18 +104,18 @@ public class Controller {
      * @param paidAmount The amount of money paid by the customer.
      * @return The change to be returned to the customer as an {@code Amount}.
      */
-    public Amount makePayment(Amount paidAmount) {
-        // Calculate change
+    public Amount makePayment(Amount paidAmount) throws DatabaseException {
+
         Amount total = currentSale.getTotalAfterDiscount();
         Amount change = paidAmount.minus(total);
 
-        // Update cash register
+
         cashRegister.addPayment(total);
 
-        // Update external systems
+
         saleLogger.logCompletedSale(currentSale);
 
-        // Print receipt
+
         receiptPrinter.printReceipt(currentSale, paidAmount);
 
         return change;
@@ -153,7 +146,7 @@ public class Controller {
      *
      * @return The total amount payable for the current sale after discounts, as an {@code Amount}.
      */
-    public Amount endSale(){
+    public Amount endSale() {
         return currentSale.getTotalAfterDiscount();
     }
 

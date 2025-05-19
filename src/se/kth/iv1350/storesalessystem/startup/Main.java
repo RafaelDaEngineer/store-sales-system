@@ -1,12 +1,10 @@
 package se.kth.iv1350.storesalessystem.startup;
 
 import se.kth.iv1350.storesalessystem.controller.Controller;
-import se.kth.iv1350.storesalessystem.integration.AccountingSystem;
-import se.kth.iv1350.storesalessystem.integration.DiscountDatabase;
-import se.kth.iv1350.storesalessystem.integration.InventorySystem;
-import se.kth.iv1350.storesalessystem.integration.Printer;
+import se.kth.iv1350.storesalessystem.integration.*;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
+import se.kth.iv1350.storesalessystem.model.IdentifierException;
 import se.kth.iv1350.storesalessystem.view.View;
 
 public class Main {
@@ -33,10 +31,10 @@ public class Main {
         System.out.println("\n=== Scanning Items ===");
 
         scanItemIndividually(controller, view, "A1", 1);
-
-        scanItemIndividually(controller, view, "ABC123a", 2);
-
+        scanItemIndividually(controller, view, "ABC123", 2);
         scanItemIndividually(controller, view, "H2O", 1);
+        scanItemIndividually(controller, view, "NONEXISTENT", 1);
+        scanItemIndividually(controller, view, "DB-ERROR-999", 1);
 
         System.out.println("\n=== End Sale ===");
         Amount totalPrice = controller.endSale();
@@ -46,12 +44,16 @@ public class Main {
         Amount amountPaid = new Amount(1500.00);
         System.out.println("Amount paid: " + amountPaid.getAmount() + " SEK");
 
-        // This will automatically print the receipt through the chain:
-        // controller -> receiptPrinter -> printer (console output)
-        Amount change = controller.makePayment(amountPaid);
+        try {
+            Amount change = controller.makePayment(amountPaid);
+            System.out.println("\n=== Change to be given to the customer ===");
+            view.displayChange(change);
+        } catch (DatabaseException e) {
+            System.out.println("ERROR: " + e.getUserFriendlyMessage());
+            System.err.println("Technical details: " + e.getMessage());
+        }
 
-        System.out.println("\n=== Change to be given to the customer ===");
-        view.displayChange(change);
+
     }
 
     /**
@@ -65,14 +67,18 @@ public class Main {
      * @param quantity   The number of times the item should be scanned.
      */
     private static void scanItemIndividually(Controller controller, View view, String itemID, int quantity) {
-        for (int i = 0; i < quantity; i++) {
-            ItemDTO item = controller.enterItem(itemID, 1);
-            if (item != null) {
-                view.displayItem(item);
-                view.displayCurrentTotal(controller.getCurrentTotal());
-                view.displayTotalVAT();
-                System.out.println("------------------------------------------");
-            }
+        try {
+            ItemDTO item = controller.enterItem(itemID, quantity);
+            view.displayItem(item);
+            view.displayCurrentTotal(controller.getCurrentTotal());
+            view.displayTotalVAT();
+            System.out.println("------------------------------------------\n");
+        } catch (IdentifierException e) {
+            System.out.println("ERROR: " + e.getUserFriendlyMessage());
+            System.err.println("Technical details: " + e.getMessage());
+        } catch (DatabaseException e) {
+            System.out.println("ERROR: " + e.getUserFriendlyMessage());
+            System.err.println("Technical details: " + e.getMessage());
         }
     }
 

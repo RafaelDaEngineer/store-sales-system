@@ -1,9 +1,7 @@
 package se.kth.iv1350.storesalessystem.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import se.kth.iv1350.storesalessystem.integration.dto.DiscountInfoDTO;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
@@ -17,7 +15,7 @@ import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 public class Sale {
     private final LocalDateTime saleTime;
     private final int saleID;
-    private final List<SaleItem> items;
+    private final Map<String, SaleItem> items;
     private int customerID;
     private Amount runningTotal;
     private Amount totalVAT;
@@ -32,7 +30,7 @@ public class Sale {
     public Sale(int saleID) {
         this.saleID = saleID;
         this.saleTime = LocalDateTime.now();
-        this.items = new ArrayList<>();
+        this.items = new LinkedHashMap<>();
         this.runningTotal = new Amount();
         this.totalVAT = new Amount();
         this.saleDiscount = new SaleDiscount();
@@ -47,7 +45,7 @@ public class Sale {
      */
     public void addItem(ItemDTO item, int quantity) {
         SaleItem saleItem = new SaleItem(item, quantity);
-        items.add(saleItem);
+        items.put(item.itemID(), saleItem);
         updateRunningTotal();
     }
 
@@ -64,7 +62,7 @@ public class Sale {
         Amount newVAT = new Amount();
         Amount newRunningTotal = new Amount();
 
-        for (SaleItem item : items) {
+        for (SaleItem item : items.values()) {
             newTotal = newTotal.plus(item.getTotalPrice());
             newVAT = newVAT.plus(item.getTotalVAT());
         }
@@ -91,7 +89,7 @@ public class Sale {
      */
     public SaleInfoDTO getSaleInfo() {
         List<ItemDTO> itemDTOs = new ArrayList<>();
-        for (SaleItem item : items) {
+        for (SaleItem item : items.values()) {
             itemDTOs.add(item.getItemDTO());
         }
         return new SaleInfoDTO(saleID, runningTotal, itemDTOs, customerID, totalVAT);
@@ -134,7 +132,7 @@ public class Sale {
      * @return An unmodifiable list of {@code SaleItem} objects representing the items in the sale.
      */
     public List<SaleItem> getItems() {
-        return Collections.unmodifiableList(items);
+        return new ArrayList<>(items.values());
     }
 
     /**
@@ -153,13 +151,12 @@ public class Sale {
      * @param itemID The unique identifier of the item to search for.
      * @return The {@code SaleItem} matching the given ID, or {@code null} if no matching item is found.
      */
-    public SaleItem findItemByID(String itemID) {
-        for (SaleItem item : items) {
-            if (item.getItemDTO().itemID().equals(itemID)) {
-                return item;
-            }
+    public SaleItem findItemByID(String itemID) throws IdentifierException {
+        SaleItem item = items.get(itemID);
+        if (item == null) {
+            throw new IdentifierException(itemID);
         }
-        return null;
+        return item;
     }
 
     /**
@@ -171,15 +168,13 @@ public class Sale {
      * @param additionalQuantity The amount by which the item's quantity should be increased.
      */
     public void increaseItemQuantity(String itemID, int additionalQuantity) {
-        SaleItem existingItem = findItemByID(itemID);
+        SaleItem existingItem = items.get(itemID);
         if (existingItem != null) {
             ItemDTO itemInfo = existingItem.getItemDTO();
             int newQuantity = existingItem.getQuantity() + additionalQuantity;
 
-            items.remove(existingItem);
-
             SaleItem updatedItem = new SaleItem(itemInfo, newQuantity);
-            items.add(updatedItem);
+            items.put(itemID, updatedItem);
 
             updateRunningTotal();
         }

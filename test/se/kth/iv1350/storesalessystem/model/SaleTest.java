@@ -45,20 +45,31 @@ class SaleTest {
     }
 
     @Test
-    void testFindItemByID() {
+    void testFindItemByID() throws IdentifierException {
         sale.addItem(testItem, 1);
         sale.addItem(anotherTestItem, 2);
 
         SaleItem foundItem = sale.findItemByID("1");
+
         assertNotNull(foundItem, "Item should be found");
         assertEquals("Item 1", foundItem.getItemDTO().name(), "Item name should match");
-
-        SaleItem notFoundItem = sale.findItemByID("999");
-        assertNull(notFoundItem, "Item should not be found with ID 999");
     }
 
     @Test
-    void testIncreaseItemQuantity() {
+    void testFindItemByIDThrowsIdentifierException() {
+        sale.addItem(testItem, 1);
+        sale.addItem(anotherTestItem, 2);
+        String nonExistentID = "999";
+
+        IdentifierException exception = assertThrows(IdentifierException.class, () -> sale.findItemByID(nonExistentID), "IdentifierException should be thrown");
+
+        assertEquals(nonExistentID, exception.getItemIdentifier(), "IdentifierException should contain ID 999");
+        assertTrue(exception.getMessage().contains("999"), "IdentifierException should contain ID 999");
+        assertEquals("The scanned item could not be found in the inventory. Please try again or contact assistance", exception.getUserFriendlyMessage(), "User friendly message should be correct");
+    }
+
+    @Test
+    void testIncreaseItemQuantity() throws IdentifierException {
         sale.addItem(testItem, 1);
         sale.increaseItemQuantity("1", 2);
 

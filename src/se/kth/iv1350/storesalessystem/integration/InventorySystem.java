@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
+import se.kth.iv1350.storesalessystem.model.IdentifierException;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
 /**
@@ -14,6 +15,7 @@ import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
  */
 public class InventorySystem {
     private final Map<String, ItemDTO> inventory;
+    private static final String DATABASE_FAILURE_TRIGGER_ID = "DB-ERROR-999";
 
     /**
      * Creates a new instance of the InventorySystem class.
@@ -34,8 +36,16 @@ public class InventorySystem {
      * @return An {@code ItemDTO} containing information about the requested item,
      * or {@code null} if no item is found for the given ID.
      */
-    public ItemDTO getItemInfo(String itemID) {
-        return inventory.get(itemID);
+    public ItemDTO getItemInfo(String itemID) throws IdentifierException, DatabaseException {
+        if (DATABASE_FAILURE_TRIGGER_ID.equals(itemID)) {
+            throw new DatabaseException("getItemInfo");
+        }
+
+        ItemDTO item = inventory.get(itemID);
+        if (item == null) {
+            throw new IdentifierException(itemID);
+        }
+        return item;
     }
 
     /**

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.kth.iv1350.storesalessystem.integration.dto.ItemDTO;
 import se.kth.iv1350.storesalessystem.model.Amount;
+import se.kth.iv1350.storesalessystem.model.IdentifierException;
 import se.kth.iv1350.storesalessystem.model.dto.SaleInfoDTO;
 
 import java.util.Collections;
@@ -22,27 +23,38 @@ class InventorySystemTest {
     }
 
     @Test
-    void testGetItemInfoExistingItem() {
+    void testGetItemInfoExistingItemReturnsCorrectItem() throws IdentifierException, DatabaseException {
         ItemDTO result = inventorySystem.getItemInfo("1");
-        assertNotNull(result, "Should find item with ID 1");
-        assertEquals("Test Item", result.name(), "Item name should match");
-        assertEquals(100.0, result.price().getAmount(), "Item price should match");
+        assertEquals(testItem.itemID(), result.itemID(), "Item ID should match");
+        assertEquals(testItem.name(), result.name(), "Item name should match");
+        assertEquals(testItem.price().getAmount(), result.price().getAmount(), "Item price should match");
     }
 
     @Test
-    void testGetItemInfoNonExistingItem() {
-        ItemDTO result = inventorySystem.getItemInfo("999");
-        assertNull(result, "Should return null for non-existing item");
+    void testGetItemInfoNonExistingItemThrowsIdentifierException() {
+        String nonExistentItemID = "NONEXISTENT";
+        IdentifierException exception = assertThrows(IdentifierException.class, () -> inventorySystem.getItemInfo(nonExistentItemID));
+        assertEquals(nonExistentItemID, exception.getItemIdentifier(), "Identifier should match item ID");
+        assertTrue(exception.getMessage().contains(nonExistentItemID), "Exception message should contain item ID");
+        assertEquals("The scanned item could not be found in the inventory. Please try again or contact assistance", exception.getUserFriendlyMessage(), "User friendly message should match");
     }
 
     @Test
-    void testAddItem() {
+    void testGetItemInfoDatabaseExceptionThrowsDatabaseException() {
+        String errorTriggeringID = "DB-ERROR-999";
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> inventorySystem.getItemInfo(errorTriggeringID));
+        assertEquals("getItemInfo", exception.getOperation(), "Operation should match");
+        assertEquals("The system is temporarily unavailable. Please try again later or contact assistance", exception.getUserFriendlyMessage(), "User friendly message should match");
+    }
+
+    @Test
+    void testAddItem() throws IdentifierException, DatabaseException {
         ItemDTO newItem = new ItemDTO("2", "New Item", "New Description", 0.12, new Amount(50));
         inventorySystem.addItem(newItem);
 
         ItemDTO result = inventorySystem.getItemInfo("2");
-        assertNotNull(result, "Should find newly added item with ID 2");
-        assertEquals("New Item", result.name(), "Item name should match");
+        assertEquals(newItem.itemID(), result.itemID(), "Item ID should match");
+        assertEquals(newItem.name(), result.name(), "Name should match");
     }
 
     @Test
