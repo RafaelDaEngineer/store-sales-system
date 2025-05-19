@@ -27,14 +27,35 @@ public class IdentifierException extends Exception {
         this.logger = new ErrorLogger();
     }
 
+    /**
+     * Logs the details of an exception indicating that an item with a specific identifier
+     * was not found in the inventory. This method is used to capture error information
+     * for debugging and analysis purposes.
+     * The logged information includes:
+     * - A description of the error, including the missing item's identifier.
+     * - The type and details of the underlying exception.
+     * This method utilizes the {@code logException} method of the {@code ErrorLogger} class to
+     * write the error details to an error log.
+     */
     public void logError() {
         logger.logException(exception, "Item with ID: " + itemIdentifier + " not found in the inventory.");
     }
 
+    /**
+     * Retrieves the identifier of the item associated with this exception.
+     *
+     * @return The identifier of the item that could not be found.
+     */
     public String getItemIdentifier() {
         return itemIdentifier;
     }
 
+    /**
+     * Retrieves a user-friendly message associated with this exception.
+     * The message provides context or guidance for the error in a way that is easy for users to understand.
+     *
+     * @return A user-friendly message describing the error or providing guidance for resolution.
+     */
     public String getUserFriendlyMessage() {
         return userFriendlyMessage;
     }

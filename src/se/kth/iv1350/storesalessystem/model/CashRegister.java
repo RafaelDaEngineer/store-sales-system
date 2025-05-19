@@ -37,14 +37,32 @@ public class CashRegister {
         return new Amount(balance.getAmount());
     }
 
+    /**
+     * Adds an observer to the list of observers that are notified whenever a significant event occurs,
+     * such as the total revenue being updated. Observers implement the TotalRevenueObserver interface.
+     *
+     * @param observer The observer to be added to the notification list.
+     */
     public void addObserver(TotalRevenueObserver observer) {
         observers.add(observer);
     }
 
+    /**
+     * Removes an observer from the list of observers. The observer will no longer be
+     * notified of updates or changes related to total revenue.
+     *
+     * @param observer The observer to be removed from the notification list.
+     */
     public void removeObserver(TotalRevenueObserver observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Notifies all registered observers of a new payment. Each observer's {@code newPayment}
+     * method is called with the specified payment amount.
+     *
+     * @param payment The payment amount that has been processed and is to be notified to the observers.
+     */
     private void notifyObservers(Amount payment) {
         for (TotalRevenueObserver observer : observers) {
             observer.newPayment(payment);

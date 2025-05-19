@@ -34,7 +34,7 @@ public class Main {
         System.out.println("Total before discount: " + beforeDiscount.getAmount() + " SEK");
 
         System.out.println("\n=== Applying Discount ===");
-        int customerID = 25000; // This ID should get a fixed discount based on your DiscountDatabase
+        int customerID = 25000;
         controller.requestDiscount(customerID);
 
         System.out.println("\n=== After Discount ===");
@@ -83,7 +83,6 @@ public class Main {
             ItemDTO item = controller.enterItem(itemID, quantity);
             view.displayItem(item);
 
-            // If there's a discount, show both original and discounted totals
             String discountDescription = controller.getDiscountDescription();
             if (!discountDescription.equals("No discount")) {
                 Amount originalTotal = controller.getOriginalTotal();

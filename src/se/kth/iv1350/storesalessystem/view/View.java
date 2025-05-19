@@ -49,11 +49,21 @@ public class View {
         System.out.println();
     }
 
+    /**
+     * Displays the current total amount of the sale, including VAT, to the user.
+     *
+     * @param total The total amount to be displayed.
+     */
     public void displayCurrentTotal(Amount total) {
         System.out.println("Total cost (incl VAT): " + formatAmount(total.getAmount()) + " SEK");
         System.out.println();
     }
 
+    /**
+     * Displays the total VAT amount for the current sale.
+     * The VAT is retrieved from the controller and printed to the console,
+     * formatted as a monetary amount followed by "SEK".
+     */
     public void displayTotalVAT() {
         Amount vat = controller.getTotalVAT();
         System.out.println("Total VAT: " + formatAmount(vat.getAmount()) + " SEK");

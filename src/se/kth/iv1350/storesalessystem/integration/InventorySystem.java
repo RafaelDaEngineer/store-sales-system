@@ -28,13 +28,16 @@ public class InventorySystem {
     }
 
     /**
-     * Retrieves detailed information about a specific item from the inventory
-     * based on its unique identifier.
+     * Retrieves information about an item in the inventory system based on its unique identifier.
+     * If the specified item identifier does not exist, or if a database error occurs, the method
+     * will throw an appropriate exception.
      *
-     * @param itemID The unique identifier of the item to retrieve information for.
-     *               If the item does not exist in the inventory, {@code null} is returned.
-     * @return An {@code ItemDTO} containing information about the requested item,
-     * or {@code null} if no item is found for the given ID.
+     * @param itemID The unique identifier of the item whose information is to be retrieved.
+     *               This identifier is used to locate the corresponding item in the inventory.
+     * @return An {@code ItemDTO} object containing the details of the requested item, such as
+     * its ID, name, description, tax rate, and price.
+     * @throws IdentifierException If no item with the specified identifier exists in the inventory.
+     * @throws DatabaseException   If a database operation fails during the execution of this method.
      */
     public ItemDTO getItemInfo(String itemID) throws IdentifierException, DatabaseException {
         if (DATABASE_FAILURE_TRIGGER_ID.equals(itemID)) {

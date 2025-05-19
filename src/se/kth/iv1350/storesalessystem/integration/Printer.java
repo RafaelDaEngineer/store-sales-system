@@ -36,7 +36,6 @@ public class Printer {
         System.out.println("Total: " + formatAmount(receiptData.totalAmount().getAmount()) + " SEK");
         System.out.println("VAT: " + formatAmount(receiptData.totalVAT().getAmount()) + " SEK");
 
-        // Add discount information to receipt
         if (receiptData.discountDescription() != null && !receiptData.discountDescription().equals("No discount")) {
             System.out.println("Discount applied: " + receiptData.discountDescription());
         }

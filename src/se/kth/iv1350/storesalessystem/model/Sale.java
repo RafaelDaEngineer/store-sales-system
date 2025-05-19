@@ -145,11 +145,12 @@ public class Sale {
     }
 
     /**
-     * Searches for a {@code SaleItem} in the current sale by its unique identifier.
-     * If the item with the specified ID exists, it will be returned; otherwise, {@code null} is returned.
+     * Finds and retrieves a {@code SaleItem} object from the current sale by its unique identifier.
+     * If the item is not found, an {@code IdentifierException} is thrown.
      *
-     * @param itemID The unique identifier of the item to search for.
-     * @return The {@code SaleItem} matching the given ID, or {@code null} if no matching item is found.
+     * @param itemID The unique identifier of the item to be retrieved from the sale.
+     * @return The {@code SaleItem} matching the given identifier.
+     * @throws IdentifierException If no item with the specified identifier can be found.
      */
     public SaleItem findItemByID(String itemID) throws IdentifierException {
         SaleItem item = items.get(itemID);
