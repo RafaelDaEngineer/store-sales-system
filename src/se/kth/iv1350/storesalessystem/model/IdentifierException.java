@@ -9,7 +9,6 @@ import se.kth.iv1350.storesalessystem.util.ErrorLogger;
  */
 public class IdentifierException extends Exception {
     private final String itemIdentifier;
-    private final String userFriendlyMessage;
     private final ErrorLogger logger;
     private final Exception exception = new Exception();
 
@@ -23,7 +22,6 @@ public class IdentifierException extends Exception {
     public IdentifierException(String itemIdentifier) {
         super("Item with identifier " + itemIdentifier + " was not found");
         this.itemIdentifier = itemIdentifier;
-        this.userFriendlyMessage = "The scanned item could not be found in the inventory. Please try again or contact assistance";
         this.logger = new ErrorLogger();
     }
 
@@ -48,15 +46,5 @@ public class IdentifierException extends Exception {
      */
     public String getItemIdentifier() {
         return itemIdentifier;
-    }
-
-    /**
-     * Retrieves a user-friendly message associated with this exception.
-     * The message provides context or guidance for the error in a way that is easy for users to understand.
-     *
-     * @return A user-friendly message describing the error or providing guidance for resolution.
-     */
-    public String getUserFriendlyMessage() {
-        return userFriendlyMessage;
     }
 }

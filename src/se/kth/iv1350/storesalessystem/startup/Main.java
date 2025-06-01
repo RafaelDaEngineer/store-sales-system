@@ -61,8 +61,7 @@ public class Main {
             System.out.println("\n=== Change to be given to the customer ===");
             view.displayChange(change);
         } catch (DatabaseException e) {
-            System.out.println("ERROR: " + e.getUserFriendlyMessage());
-            System.err.println("Technical details: " + e.getMessage());
+            System.err.println("ERROR: " + e.getMessage());
         }
 
 
@@ -95,12 +94,10 @@ public class Main {
             view.displayTotalVAT();
             System.out.println("------------------------------------------\n");
         } catch (IdentifierException e) {
-            System.out.println("ERROR: " + e.getUserFriendlyMessage());
-            System.err.println("Technical details: " + e.getMessage());
+            System.err.println("ERROR: " + e.getMessage());
             e.logError();
         } catch (DatabaseException e) {
-            System.out.println("ERROR: " + e.getUserFriendlyMessage());
-            System.err.println("Technical details: " + e.getMessage());
+            System.err.println("ERROR: " + e.getMessage());
             e.logError();
         }
     }

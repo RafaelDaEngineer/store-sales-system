@@ -23,3 +23,75 @@ java.lang.Exception
 	at se.kth.iv1350.storesalessystem.integration.DatabaseException.logError(DatabaseException.java:32)
 	at se.kth.iv1350.storesalessystem.startup.Main.scanItemIndividually(Main.java:105)
 	at se.kth.iv1350
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:34:16
+Context: Item with ID: NONEXISTENT not found in the inventory.
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.model.IdentifierException.<init>(IdentifierException.java:13)
+	at se.kth.iv1350.storesalessystem.integration.InventorySystem.getItemInfo(InventorySystem.java:49)
+	at se.kth.iv1350.store
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:34:16
+Context: Database operation failed: getItemInfo - Database server is unavailable
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.integration.DatabaseException.logError(DatabaseException.java:38)
+	at se.kth.iv1350.storesalessystem.startup.Main.scanItemIndividually(Main.java:103)
+	at se.kth.iv1350
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:37:12
+Context: Item with ID: NONEXISTENT not found in the inventory.
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.model.IdentifierException.<init>(IdentifierException.java:13)
+	at se.kth.iv1350.storesalessystem.integration.InventorySystem.getItemInfo(InventorySystem.java:49)
+	at se.kth.iv1350.store
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:37:12
+Context: Database operation failed: getItemInfo - Database server is unavailable
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.integration.DatabaseException.logError(DatabaseException.java:38)
+	at se.kth.iv1350.storesalessystem.startup.Main.scanItemIndividually(Main.java:103)
+	at se.kth.iv1350
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:39:16
+Context: Item with ID: NONEXISTENT not found in the inventory.
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.model.IdentifierException.<init>(IdentifierException.java:13)
+	at se.kth.iv1350.storesalessystem.integration.InventorySystem.getItemInfo(InventorySystem.java:49)
+	at se.kth.iv1350.store
+
+-----------------------ERROR LOG---------------------
+Timestamp: 2025-06-01 08:39:16
+Context: Database operation failed: getItemInfo - Database server is unavailable
+Exception Type: java.lang.Exception
+Exception Message: null
+------------------------------------------------
+Stack trace:
+java.lang.Exception
+	at se.kth.iv1350.storesalessystem.integration.DatabaseException.logError(DatabaseException.java:36)
+	at se.kth.iv1350.storesalessystem.startup.Main.scanItemIndividually(Main.java:101)
+	at se.kth.iv1350

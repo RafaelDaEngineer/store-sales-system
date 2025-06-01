@@ -67,13 +67,15 @@ public class Controller {
     }
 
     /**
-     * Enters an item into the current sale by its ID and specified quantity.
-     * If the item is already in the sale, its quantity will be increased.
-     * If the item does not exist in the inventory, null is returned.
+     * Adds or updates an item in the current sale based on the specified item ID and quantity.
+     * If the item already exists in the current sale, its quantity is increased.
+     * If the item does not exist, it is added with the given quantity.
      *
-     * @param itemID   The ID of the item to be added or updated in the sale.
-     * @param quantity Quantity of items to add to the sale.
-     * @return The information about the item as an {@code ItemDTO}, or {@code null} if the item is not found in the inventory.
+     * @param itemID   The unique identifier of the item to be added or updated in the current sale.
+     * @param quantity The number of units of the item to add or update.
+     * @return An {@code ItemDTO} object containing detailed information about the item.
+     * @throws IdentifierException If the specified item ID is not found in the inventory system.
+     * @throws DatabaseException   If there is an issue accessing the inventory system or database.
      */
     public ItemDTO enterItem(String itemID, int quantity) throws IdentifierException, DatabaseException {
         ItemDTO itemInfo = inventorySystem.getItemInfo(itemID);
@@ -103,12 +105,13 @@ public class Controller {
 
 
     /**
-     * Processes the payment for the current sale and performs several actions:
-     * calculates and returns the customer's change, updates the cash register,
-     * logs the sale in external systems, and prints a receipt.
+     * Processes the payment for the current sale by calculating the change,
+     * updating the cash register, logging the sale, and printing the receipt.
      *
-     * @param paidAmount The amount of money paid by the customer.
+     * @param paidAmount The amount paid by the customer for the current sale.
      * @return The change to be returned to the customer as an {@code Amount}.
+     * @throws DatabaseException If there is an issue accessing the database
+     *                           during the sale logging or inventory update process.
      */
     public Amount makePayment(Amount paidAmount) throws DatabaseException {
 

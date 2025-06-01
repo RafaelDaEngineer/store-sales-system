@@ -8,7 +8,6 @@ import se.kth.iv1350.storesalessystem.util.ErrorLogger;
  * information about the failed operation and provides a user-friendly message for error handling.
  */
 public class DatabaseException extends Exception {
-    private final String userFriendlyMessage;
     private final String operation;
     private final ErrorLogger logger;
 
@@ -24,7 +23,6 @@ public class DatabaseException extends Exception {
     public DatabaseException(String operation) {
         super("Database operation failed: " + operation + " - Database server is unavailable");
         this.operation = operation;
-        this.userFriendlyMessage = "The system is temporarily unavailable. Please try again later or contact assistance";
         this.logger = new ErrorLogger();
     }
 
@@ -36,17 +34,6 @@ public class DatabaseException extends Exception {
      */
     public void logError() {
         logger.logException(new Exception(), "Database operation failed: " + operation + " - Database server is unavailable");
-    }
-
-    /**
-     * Retrieves the user-friendly error message associated with this exception.
-     * This message is intended to provide a clear and understandable explanation
-     * of the issue to the end-user, for example, in UI error dialogs or logs.
-     *
-     * @return A string containing the user-friendly error message.
-     */
-    public String getUserFriendlyMessage() {
-        return userFriendlyMessage;
     }
 
     /**
